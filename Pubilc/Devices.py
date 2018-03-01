@@ -7,11 +7,11 @@ from Pubilc.ReadConfig import ReadConfig
 
 class Devices:
     def __init__(self):
-        self.Devices_LIST = ReadConfig().get_host()+'list'
+        self.list_url = ReadConfig().get_host() + 'list'
 
     def get_devices(self):
         devices = []
-        value = requests.get(self.Devices_LIST).json()
+        value = requests.get(self.list_url).json()
         # print(value[1])
         for v in value:
             if v["present"] == True:
@@ -40,7 +40,7 @@ class Devices:
 
 
 
-if __name__ == '__main__':
-    drivers = Devices().get_devices()
-    print(drivers)
-    print(Devices().handle_devices(drivers[1]['udid']))
+# if __name__ == '__main__':
+#     drivers = Devices().get_devices()
+#     print(drivers)
+#     print(Devices().handle_devices(drivers[1]['udid']))

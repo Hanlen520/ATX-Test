@@ -16,7 +16,7 @@ class ReadConfig:
         self.cf.read(configPath, encoding='UTF-8')
 
     def get_command(self):
-        value = self.cf.get("ATXSERVER", "command")
+        value = self.cf.get("ATXSERVER", "handle")
         return value
 
     def get_host(self):
