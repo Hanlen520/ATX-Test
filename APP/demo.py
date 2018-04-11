@@ -40,7 +40,8 @@ if __name__ == '__main__':
 #     Devices().handle_devices(devices_list[0]['udid'])
 #
 #     ip = devices_list[0]['ip']
-#     u = u2.connect(ip)
+    u = u2.connect(ip)
+
 #     print(u.info)
 #     u.drag(sx, sy, ex, ey)
     # u.app_start('com.netease.cloudmusic')
