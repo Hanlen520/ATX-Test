@@ -7,6 +7,7 @@
 
 
 import functools
+from logzero import logger
 
 
 class GT(object):
@@ -19,6 +20,7 @@ class GT(object):
         # self._package_name = package_name
         broadcast = self._broadcast
         # 1. start app
+        logger.info('Starting GT Test')
         self.quit()  # reset gt
         self.clean_data()  # clean old data
         self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
@@ -40,6 +42,7 @@ class GT(object):
             broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'fps', '1')
 
         # 4. switch back to app
+        logger.info('GT Setup already, switch back to app to testing......')
         self.d.app_start(package_name)
 
     def stop_test(self, package_name):
@@ -47,26 +50,29 @@ class GT(object):
         self.d.app_stop(package_name)
         self.quit()
         self.backup_data()
-        # print(u'请手动打开GT App导出测试数据后，执行')
-        # print('$ adb pull /sdcard/GTRData/data.js\n将data.js文件传到电脑上')
+        self.export_data()
+        logger.info('GT Test end')
+        logger.info('$ adb pull /sdcard/GTRData/data.js\n将data.js文件传到电脑上')
 
     def backup_data(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
+        logger.info('Backup Test data')
 
     def clean_data(self):
         self.d.adb_shell('rm -r sdcard/GTR')
+        logger.info('Clean old data sdcard/GTR')
 
     def quit(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
 
     def export_data(self):
         self.d.adb_shell('rm -r sdcard/GTRGata')
-        print('clear old json data')
+        logger.info('clear old json data')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
         self.d(resourceId="com.tencent.wstt.gt:id/imageView").click()
         self.d(resourceId="android:id/button1").click()
-        print('json data exported success')
+        logger.info('json data exported success')
 
 

@@ -4,10 +4,12 @@
 import sys
 # sys.path.append(os.path.split(os.path.split(os.path.abspath(''))[0])[0])
 sys.path.append('..')
-from logzero import logger
+
 from Pubilc.Devices import Devices
 import uiautomator2 as u2
 from Pubilc.Base import BasePage
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
 class testdemo(BasePage):
     def __init__(self):
@@ -23,39 +25,34 @@ class testdemo(BasePage):
         BasePage(self.driver).swipe_right()
 
 
-
-
-
-
-
-
+def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
+    """is toast exist, return True or False
+    :Agrs:
+     - toastmessage   - 页面上看到的toast消息文本内容
+     - timeout - 最大超时时间，默认30s
+     - poll_frequency  - 间隔查询时间，默认0.5s查询一次
+    :Usage:
+     is_toast_exist(driver, "toast消息的内容")
+    """
+    try:
+        toast_loc = ("xpath", ".//*[contains(@text,'%s')]" % toastmessage)
+        print(toast_loc)
+        WebDriverWait(driver, timeout, poll_frequency).until(
+            expected_conditions.presence_of_element_located(toast_loc))
+        return True
+    except:
+        return False
 
 if __name__ == '__main__':
-    testdemo().swiptest()
+    d = u2.connect()
+    # d.app_start('com.github.android_app_bootstrap')
+    # d(resourceId="com.github.android_app_bootstrap:id/login_button").click()
+    # d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
+    # d(resourceId="android:id/text1").click()
+    d(resourceId="com.github.android_app_bootstrap:id/alert_button").click()
+    print(is_toast_exist(d, 'Hello'))
 
 
 
-#     devices_list = Devices().get_devices()
-#
-#     Devices().handle_devices(devices_list[0]['udid'])
-#
-#     ip = devices_list[0]['ip']
-    u = u2.connect(ip)
-
-#     print(u.info)
-#     u.drag(sx, sy, ex, ey)
-    # u.app_start('com.netease.cloudmusic')
-    # u(text='私人FM').click()
-    # u(description='转到上一层级').click()
-    # u(text='每日推荐').click()
-    # u(description='转到上一层级').click()
-    # u(text='歌单').click()
-    # u(description='转到上一层级').click()
-    # u(text='排行榜').click()
-    # u(description='转到上一层级').click()
-    # logger.debug("hello %s", "world")
-    # logger.info("info")
-    # logger.warning("warn")
-    # logger.error("error")
 
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-
 sys.path.append('..')
 import requests
 from logzero import logger

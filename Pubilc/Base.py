@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 import uiautomator2 as u2
 from Pubilc.Devices import Devices
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
+
 
 class BasePage(object):
     # @classmethod
@@ -38,10 +41,10 @@ class BasePage(object):
             toY = y_up
         else:
             x, y = self._get_window_size()
-            fromX = 0.5*x
-            fromY = 0.5*y
-            toX = 0.5*x
-            toY = 0.25*y
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.5 * x
+            toY = 0.25 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
     def swipe_down(self, element=None, steps=0.05):
@@ -60,10 +63,10 @@ class BasePage(object):
             toY = y_up
         else:
             x, y = self._get_window_size()
-            fromX = 0.5*x
-            fromY = 0.5*y
-            toX = 0.5*x
-            toY = 0.75*y
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.5 * x
+            toY = 0.75 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
     def swipe_left(self, element=None, steps=0.05):
@@ -82,10 +85,10 @@ class BasePage(object):
             toY = y_up
         else:
             x, y = self._get_window_size()
-            fromX = 0.5*x
-            fromY = 0.5*y
-            toX = 0.25*x
-            toY = 0.5*y
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.25 * x
+            toY = 0.5 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
     def swipe_right(self, element=None, steps=0.05):
@@ -104,9 +107,25 @@ class BasePage(object):
             toY = y_up
         else:
             x, y = self._get_window_size()
-            fromX = 0.5*x
-            fromY = 0.5*y
-            toX = 0.75*x
-            toY = 0.5*y
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.75 * x
+            toY = 0.5 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
+    def is_toast_exist(self, toastmessage, timeout=30, poll_frequency=0.5):
+        """is toast exist, return True or False
+        :Agrs:
+         - toastmessage   - 页面上看到的toast消息文本内容
+         - timeout - 最大超时时间，默认30s
+         - poll_frequency  - 间隔查询时间，默认0.5s查询一次
+        :Usage:
+         is_toast_exist(driver, "toast消息的内容")
+        """
+        try:
+            toast_loc = ("xpath", ".//*[contains(@text,'%s')]" % toastmessage)
+            WebDriverWait(self.driver, timeout, poll_frequency).until(
+                expected_conditions.presence_of_element_located(toast_loc))
+            return True
+        except:
+            return False
