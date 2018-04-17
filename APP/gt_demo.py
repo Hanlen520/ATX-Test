@@ -13,4 +13,6 @@ GT(d).start_test('com.gtr.sdkdemo', jif=True, pri=True)
 time.sleep(10)
 #
 GT(d).stop_test('com.gtr.sdkdemo')
+GT(d).export_data()
+
 

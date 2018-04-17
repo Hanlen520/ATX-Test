@@ -46,11 +46,11 @@ class GT(object):
         self._broadcast('com.tencent.wstt.gt.baseCommand.endTest', '--es', 'pkgName', package_name)
         self.d.app_stop(package_name)
         self.quit()
-        self.export_data()
-        print(u'请手动打开GT App导出测试数据后，执行')
-        print('$ adb pull /sdcard/GTRData/data.js\n将data.js文件传到电脑上')
+        self.backup_data()
+        # print(u'请手动打开GT App导出测试数据后，执行')
+        # print('$ adb pull /sdcard/GTRData/data.js\n将data.js文件传到电脑上')
 
-    def export_data(self):
+    def backup_data(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
 
     def clean_data(self):
@@ -58,4 +58,15 @@ class GT(object):
 
     def quit(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
+
+    def export_data(self):
+        self.d.adb_shell('rm -r sdcard/GTRGata')
+        print('clear old json data')
+        self.d.app_start('com.tencent.wstt.gt')
+        self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
+        self.d(resourceId="android:id/button2").click()
+        self.d(resourceId="com.tencent.wstt.gt:id/imageView").click()
+        self.d(resourceId="android:id/button1").click()
+        print('json data exported success')
+
 
