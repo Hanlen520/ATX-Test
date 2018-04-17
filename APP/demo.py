@@ -49,10 +49,12 @@ if __name__ == '__main__':
     # d(resourceId="com.github.android_app_bootstrap:id/login_button").click()
     # d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
     # d(resourceId="android:id/text1").click()
-    d(resourceId="com.github.android_app_bootstrap:id/alert_button").click()
-    print(is_toast_exist(d, 'Hello'))
+    # d(resourceId="com.github.android_app_bootstrap:id/alert_button").click()
+    # print(is_toast_exist(d, 'Hello'))
+    # d(text='添加').click_exists(10)
 
-
+    # d.pull("/sdcard/GTRData/data.js", '/tmp/data.js')
+    # d.unlock()
 
 
 

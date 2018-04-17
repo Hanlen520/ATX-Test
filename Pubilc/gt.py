@@ -8,6 +8,7 @@
 
 import functools
 from logzero import logger
+import time
 
 
 class GT(object):
@@ -20,10 +21,16 @@ class GT(object):
         # self._package_name = package_name
         broadcast = self._broadcast
         # 1. start app
+        # self.d.unlock()
+        # logger.info('Unlock the device')
         logger.info('Starting GT Test')
+
         self.quit()  # reset gt
         self.clean_data()  # clean old data
+        self.d.app_stop_all()
+        logger.info('stopping all app')
         self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
+        logger.info('start com.tencent.wstt.gt')
 
         # 2. set test package name
         broadcast('com.tencent.wstt.gt.baseCommand.startTest', '--es', 'pkgName', package_name)
@@ -52,7 +59,6 @@ class GT(object):
         self.backup_data()
         self.export_data()
         logger.info('GT Test end')
-        logger.info('$ adb pull /sdcard/GTRData/data.js\n将data.js文件传到电脑上')
 
     def backup_data(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
@@ -66,13 +72,18 @@ class GT(object):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
 
     def export_data(self):
-        self.d.adb_shell('rm -r sdcard/GTRGata')
+        self.d.adb_shell('rm -r sdcard/GTRData')
         logger.info('clear old json data')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
         self.d(resourceId="com.tencent.wstt.gt:id/imageView").click()
         self.d(resourceId="android:id/button1").click()
+        time.sleep(3)
         logger.info('json data exported success')
+
+    def pull_js(self, dst='../GT_Report/data/data.js'):
+        self.d.pull('/sdcard/GTRData/data.js', dst)
+        logger.info('pull data.js to %s' % dst)
 
 

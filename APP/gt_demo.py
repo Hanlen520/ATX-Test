@@ -5,13 +5,13 @@ from Pubilc.gt import GT
 
 import time
 
-d = u2.connect()
+d = u2.connect('10.0.30.71')
 d.unlock()
-# d.app_stop_all()
-GT(d).start_test('com.gtr.sdkdemo', jif=True, pri=True)
+GT(d).start_test('com.gtr.sdkdemo')
 
-time.sleep(10)
-#
+time.sleep(15)
+
 GT(d).stop_test('com.gtr.sdkdemo')
+GT(d).pull_js()
 
 
