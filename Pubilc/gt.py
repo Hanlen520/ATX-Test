@@ -21,16 +21,19 @@ class GT(object):
         # self._package_name = package_name
         broadcast = self._broadcast
         # 1. start app
-        # self.d.unlock()
-        # logger.info('Unlock the device')
-        logger.info('Starting GT Test')
+        logger.info('Unlock the device')
+        self.d.unlock()
 
         self.quit()  # reset gt
+
+        logger.info('Clear GTR file')
         self.clean_data()  # clean old data
+
+        logger.info('Stopping all running app')
         self.d.app_stop_all()
-        logger.info('stopping all app')
+
+        logger.info('start GT App')
         self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
-        logger.info('start com.tencent.wstt.gt')
 
         # 2. set test package name
         broadcast('com.tencent.wstt.gt.baseCommand.startTest', '--es', 'pkgName', package_name)
@@ -49,41 +52,49 @@ class GT(object):
             broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'fps', '1')
 
         # 4. switch back to app
-        logger.info('GT Setup already, switch back to app to testing......')
-        self.d.app_start(package_name)
+        logger.info('GT Setup already, starting GT test......')
+        time.sleep(3)
+        # self.d.app_start(package_name)
 
     def stop_test(self, package_name):
         self._broadcast('com.tencent.wstt.gt.baseCommand.endTest', '--es', 'pkgName', package_name)
-        self.d.app_stop(package_name)
-        self.quit()
+        logger.info('Back_up GTR file')
         self.backup_data()
+        self.quit()
+        self.d.app_stop(package_name)
+        logger.info('Testing finished')
         self.export_data()
-        logger.info('GT Test end')
+        self.pull_js()
 
     def backup_data(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
         logger.info('Backup Test data')
 
     def clean_data(self):
+        '''Clean old data sdcard/GTR'''
+        # self._broadcast('com.tencent.wstt.gt.baseCommand.clearData')
         self.d.adb_shell('rm -r sdcard/GTR')
-        logger.info('Clean old data sdcard/GTR')
+
 
     def quit(self):
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
+        self.d.app_stop('com.tencent.wstt.gt')
 
     def export_data(self):
-        self.d.adb_shell('rm -r sdcard/GTRData')
-        logger.info('clear old json data')
+        logger.info('Start to export json data')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
         self.d(resourceId="com.tencent.wstt.gt:id/imageView").click()
         self.d(resourceId="android:id/button1").click()
-        time.sleep(3)
+        time.sleep(0.2)
+        self.d(resourceId="android:id/progress").wait_gone()
         logger.info('json data exported success')
+        time.sleep(5)
+        self.quit()
 
     def pull_js(self, dst='../GT_Report/data/data.js'):
         self.d.pull('/sdcard/GTRData/data.js', dst)
-        logger.info('pull data.js to %s' % dst)
+        logger.info('Pull data.js to %s Success' % dst)
 
 

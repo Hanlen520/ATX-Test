@@ -4,12 +4,15 @@
 import sys
 # sys.path.append(os.path.split(os.path.split(os.path.abspath(''))[0])[0])
 sys.path.append('..')
-
+import time
 from Pubilc.Devices import Devices
 import uiautomator2 as u2
 from Pubilc.Base import BasePage
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
+from Pubilc.gt import GT
+
+u2.DEBUG = True
 
 class testdemo(BasePage):
     def __init__(self):
@@ -33,6 +36,7 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
      - poll_frequency  - 间隔查询时间，默认0.5s查询一次
     :Usage:
      is_toast_exist(driver, "toast消息的内容")
+
     """
     try:
         toast_loc = ("xpath", ".//*[contains(@text,'%s')]" % toastmessage)
@@ -43,18 +47,15 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
     except:
         return False
 
+
 if __name__ == '__main__':
     d = u2.connect()
     # d.app_start('com.github.android_app_bootstrap')
     # d(resourceId="com.github.android_app_bootstrap:id/login_button").click()
     # d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
     # d(resourceId="android:id/text1").click()
-    # d(resourceId="com.github.android_app_bootstrap:id/alert_button").click()
+    # d(resourceId="android:id/body").wait_gone()
+    # print(type(d(resourceId='android:id/message').get_text))
     # print(is_toast_exist(d, 'Hello'))
-    # d(text='添加').click_exists(10)
-
-    # d.pull("/sdcard/GTRData/data.js", '/tmp/data.js')
-    # d.unlock()
-
-
-
+    GT(d).export_data()
+    GT(d).pull_js()
