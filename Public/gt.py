@@ -29,7 +29,7 @@ class GT(object):
         logger.info('Stopping all running app')
         self.d.app_stop_all()
 
-        logger.info('start GT App')
+        logger.info('starting GT Test')
         self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
 
         # 2. set test package name
@@ -65,12 +65,13 @@ class GT(object):
         self.d.app_stop(package_name)
         logger.info('Testing finished>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         self.export_data()
-        self.pull_js()
+
 
     def backup_data(self):
         '''备份GTR文件到GTR_Backup'''
-        self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
-        logger.info('Backup Test data')
+        # self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
+        self.d.adb_shell('cp -r sdcard/GTR/. sdcard/GTR_Backup/')
+        logger.info('Backup Test data success')
 
     def clean_data(self):
         '''清除GTR文件'''
@@ -81,20 +82,27 @@ class GT(object):
         '''结束GT并退出'''
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
         self.d.app_stop('com.tencent.wstt.gt')
+        logger.info('exitGT and stop GT App')
 
     def export_data(self):
-        '''导出js文件的UI自动化脚本'''
-        logger.info('Start to export json data')
+        '''导出js文件的UI自动化脚本,并pull到data.js到电脑'''
+        logger.info('Starting to export json data')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
-        self.d(resourceId="com.tencent.wstt.gt:id/imageView").click()
+        filename = self.d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
+        self.d(resourceId="com.tencent.wstt.gt:id/textView").click()
         self.d(resourceId="android:id/button1").click()
-        time.sleep(0.2) # 点击确定后需要sleep一下才会捕捉到progress
-        self.d(resourceId="android:id/progress").wait_gone()
-        logger.info('json data exported success')
-        time.sleep(5)
-        self.quit()
+        time.sleep(0.2)  # 点击确定后需要sleep一下才会捕捉到progress
+        f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)
+        if f:
+            logger.info('%s exported success' % filename)
+            self.pull_js()
+            time.sleep(3)
+            self.quit()
+        else:
+            logger.error('%s exported Failed\n Please Export data.js manually ' % filename)
+
 
     def pull_js(self, dst='../GT_Report/data/data.js'):
         '''pull /sdcard/GTRData/data.js ../GT_Report/data/data.js '''

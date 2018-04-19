@@ -4,7 +4,7 @@ import sys
 sys.path.append('..')
 import requests
 from logzero import logger
-from Pubilc.ReadConfig import ReadConfig
+from Public.ReadConfig import ReadConfig
 
 
 class Devices:
