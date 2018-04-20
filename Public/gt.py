@@ -17,19 +17,16 @@ class GT(object):
         self._broadcast = functools.partial(self.d.adb_shell, 'am', 'broadcast', '-a',)
         # self._package_name = None
 
-    def start_test(self, package_name, cpu=True, net=True, pss=True, jif=False,pri=False,fps=False):
+    def start_test(self, package_name, cpu=True, net=True, pss=True, jif=False, pri=False, fps=False):
         # self._package_name = package_name
         broadcast = self._broadcast
         # 1. start app
-        self.quit()  # reset gt
-
-        logger.info('Clear GTR file')
         self.clean_data()  # clean old data
 
         logger.info('Stopping all running app')
         self.d.app_stop_all()
 
-        logger.info('starting GT Test')
+        logger.info('Starting GT Test')
         self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
 
         # 2. set test package name
@@ -53,40 +50,35 @@ class GT(object):
         time.sleep(3)
         # self.d.app_start(package_name)
 
-    def stop_test(self, package_name):
-        '''
-        停止测试，备份测试数据、关闭GT和被测app、执行导出js的自动化脚本、执行Pull 将data.js 复制到电脑
-        :param package_name: test app package_name
-        :return:
-        '''
-        self._broadcast('com.tencent.wstt.gt.baseCommand.endTest', '--es', 'pkgName', package_name)
-        self.backup_data()
+    def stop_test(self):
+        '''停止测试，备份测试数据、关闭GT、执行导出js的自动化脚本、执行Pull 将data.js 复制到电脑'''
+        self._broadcast('com.tencent.wstt.gt.baseCommand.endTest')
         self.quit()
-        self.d.app_stop(package_name)
+        self.backup_data()
         logger.info('Testing finished>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         self.export_data()
-
 
     def backup_data(self):
         '''备份GTR文件到GTR_Backup'''
         # self._broadcast('com.tencent.wstt.gt.baseCommand.exportData', '--es', 'saveFolderName', '/sdcard/GTR_Backup/')
         self.d.adb_shell('cp -r sdcard/GTR/. sdcard/GTR_Backup/')
-        logger.info('Backup Test data success')
+        logger.info('Backup /GTR/ to /GTR_Backup/ success')
 
     def clean_data(self):
         '''清除GTR文件'''
         # self._broadcast('com.tencent.wstt.gt.baseCommand.clearData')
         self.d.adb_shell('rm -r sdcard/GTR')
+        logger.info('Clearing GTR file')
 
     def quit(self):
         '''结束GT并退出'''
         self._broadcast('com.tencent.wstt.gt.baseCommand.exitGT')
         self.d.app_stop('com.tencent.wstt.gt')
-        logger.info('exitGT and stop GT App')
+        logger.info('Exiting GT and stop GT App')
 
     def export_data(self):
         '''导出js文件的UI自动化脚本,并pull到data.js到电脑'''
-        logger.info('Starting to export json data')
+        logger.info('Starting launch GT to export json data')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
@@ -94,19 +86,18 @@ class GT(object):
         self.d(resourceId="com.tencent.wstt.gt:id/textView").click()
         self.d(resourceId="android:id/button1").click()
         time.sleep(0.2)  # 点击确定后需要sleep一下才会捕捉到progress
-        f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)
+        f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)  # 等待导出是否结束，最长30分钟
         if f:
             logger.info('%s exported success' % filename)
             self.pull_js()
             time.sleep(3)
             self.quit()
         else:
-            logger.error('%s exported Failed\n Please Export data.js manually ' % filename)
-
+            logger.error('%s exported Failed\n Please Export data.js Manually ' % filename)
 
     def pull_js(self, dst='../GT_Report/data/data.js'):
-        '''pull /sdcard/GTRData/data.js ../GT_Report/data/data.js '''
+        '''将手机内的data.js复制到电脑'''
         self.d.pull('/sdcard/GTRData/data.js', dst)
-        logger.info('Pull data.js to %s Success' % dst)
+        logger.info('Pull data.js to %s ' % dst)
 
 

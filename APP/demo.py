@@ -18,19 +18,6 @@ import io
 
 u2.DEBUG = True
 
-class testdemo(BasePage):
-    def __init__(self):
-        devices_list = Devices().get_devices()
-        # Devices().handle_devices(devices_list[1]['udid'])
-        ip = devices_list[1]['ip']
-        self.driver = u2.connect(ip)
-
-    def swiptest(self):
-        BasePage(self.driver).swipe_up()
-        BasePage(self.driver).swipe_down()
-        BasePage(self.driver).swipe_left()
-        BasePage(self.driver).swipe_right()
-
 
 def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
     """is toast exist, return True or False
@@ -51,9 +38,9 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
     except:
         return False
 
-def zip_report(zipname):
+def zip_report(name):
     startdir = "../GT_Report"  # 要压缩的文件夹路径
-    file_news = zipname + '.zip'  # 压缩后文件夹的名字
+    file_news = name + '.zip'  # 压缩后文件夹的名字
     z = zipfile.ZipFile(file_news, 'w', zipfile.ZIP_DEFLATED)  # 参数一：文件夹名
     for dirpath, dirnames, filenames in os.walk(startdir):
         fpath = dirpath.replace(startdir, '')  # 这一句很重要，不replace的话，就从根目录开始复制
@@ -73,9 +60,16 @@ if __name__ == '__main__':
     # d(resourceId="android:id/body").wait_gone()
     # print(type(d(resourceId='android:id/message').get_text))
     # print(is_toast_exist(d, 'Hello'))
-    GT(d).export_data()
+    # GT(d).backup_data()
     # GT(d).pull_js()
     # filename = d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
     # print(filename)
+    print(d.info)
+    # d.open_identify(theme='red')
+    # os.system('adb install -r D:\\apk\\xdf.android_unlock.apk')
+    # time.sleep(5)
+    # d.app_start('xdf.android_unlock')
+    # d.press("home")
+    d.open_identify('red')
 
 
