@@ -4,7 +4,7 @@
 import sys
 # sys.path.append(os.path.split(os.path.split(os.path.abspath(''))[0])[0])
 sys.path.append('..')
-print(sys.path)
+
 import time
 from Public.Devices import Devices
 import uiautomator2 as u2
@@ -15,6 +15,7 @@ from Public.gt import GT
 import zipfile
 import os
 import io
+from Public.atx_server import ATX_Server
 
 u2.DEBUG = True
 
@@ -52,24 +53,24 @@ def zip_report(name):
 
 
 if __name__ == '__main__':
-    d = u2.connect()
-    # d.app_start('com.github.android_app_bootstrap')
-    # d(resourceId="com.github.android_app_bootstrap:id/login_button").click()
-    # d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
-    # d(resourceId="android:id/text1").click()
-    # d(resourceId="android:id/body").wait_gone()
-    # print(type(d(resourceId='android:id/message').get_text))
-    # print(is_toast_exist(d, 'Hello'))
-    # GT(d).backup_data()
-    # GT(d).pull_js()
-    # filename = d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
-    # print(filename)
-    print(d.info)
-    # d.open_identify(theme='red')
-    # os.system('adb install -r D:\\apk\\xdf.android_unlock.apk')
-    # time.sleep(5)
-    # d.app_start('xdf.android_unlock')
-    # d.press("home")
-    d.open_identify('red')
+    a = ATX_Server(url='http://10.0.34.223:8000')
+
+    print('google brand devices')
+    print(a.brand_devices('samsung'))
+    print(a.count())
+
+    print('sdk')
+    print(a.brand_devices(19))
+    print(a.count())
+
+    print('serial_devices')
+    print(a.serial_devices('ce051715b2ef600802'))
+    print(a.count())
+
+    print('model')
+    print(a.model_devices('SM-G950F'))
+    print(a.count())
+
+
 
 

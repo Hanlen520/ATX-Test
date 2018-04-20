@@ -5,32 +5,43 @@ sys.path.append('..')
 import requests
 from logzero import logger
 from Public.ReadConfig import ReadConfig
+from Public.atx_server import ATX_Server
+from tinydb import where
+
+s = ATX_Server(url=ReadConfig().get_host())
 
 
 class Devices:
-    def __init__(self):
-        self.list_url = ReadConfig().get_host() + 'list'
+    # def get_devices(self):
+    #     '''
+    #     获取atxserver在线的设备
+    #     :return: devices 在线的设备以列表返回
+    #     '''
+    #     devices = []
+    #     value = requests.get(self.list_url).json()
+    #     # print(value[1])
+    #     for v in value:
+    #         if v["present"] == True:
+    #             devices.append(v)
+    #         elif v["present"] == False:
+    #             logger.warning('Devices %s is offline' % v['udid'])
+    #         else:
+    #             logger.error(Exception)
+    #
+    #     logger.info('Online devices Number is : %s' % len(devices))
+    #     for i in devices:
+    #         logger.info('Online devices  : %s' % i["udid"])
+    #     return devices
 
-    def get_devices(self):
-        '''
-        获取atxserver在线的设备
-        :return: devices 在线的设备以列表返回
-        '''
-        devices = []
-        value = requests.get(self.list_url).json()
-        # print(value[1])
-        for v in value:
-            if v["present"] == True:
-                devices.append(v)
-            elif v["present"] == False:
-                logger.warning('Devices %s is offline' % v['udid'])
-            else:
-                logger.error(Exception)
+    def ready_devices(self):
+        s.load()
+        ready_devices = s.find(where('ready') == True).devices()
+        return ready_devices
 
-        logger.info('Online devices Number is : %s' % len(devices))
-        for i in devices:
-            logger.info('Online devices  : %s' % i["udid"])
-        return devices
+    def online_devices(self):
+        s.load()
+        online_devices = s.find(where('present') == True).devices()
+        return online_devices
 
     def handle_device(self, device):
         '''
