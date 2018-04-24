@@ -79,6 +79,7 @@ class GT(object):
     def export_data(self):
         '''导出js文件的UI自动化脚本,并pull到data.js到电脑'''
         logger.info('Starting launch GT to export json data')
+        self.d.adb_shell('rm -r sdcard/GTRData/data.js')
         self.d.app_start('com.tencent.wstt.gt')
         self.d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
         self.d(resourceId="android:id/button2").click()
@@ -88,17 +89,21 @@ class GT(object):
         time.sleep(0.2)  # 点击确定后需要sleep一下才会捕捉到progress
         f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)  # 等待导出是否结束，最长30分钟
         if f:
-            logger.info('%s exported success' % filename)
-            self.pull_js()
-            time.sleep(3)
-            self.quit()
+            if 'data' in self.d.adb_shell('ls /sdcard/GTRData/'):
+                logger.info('%s exported success' % filename)
+                self.pull_js()
+                time.sleep(3)
+                self.d.app_stop_all()
+            else:
+                logger.error('There is no data.js in /sdcard/GTRData!\n Please check data.js manually!')
         else:
-            logger.error('%s exported Failed\n Please Export data.js Manually ' % filename)
+            logger.error('%s exported Failed\n Please Export data.js manually! ' % filename)
 
     def pull_js(self, dst='../GT_Report/data/data.js'):
         '''将手机内的data.js复制到电脑'''
+        logger.info('Starting to pull data.js to %s ' % dst)
         self.d.pull('/sdcard/GTRData/data.js', dst)
-        logger.info('Pull data.js to %s ' % dst)
+        logger.info('Pull data.js success')
 
 def zip_report(name):
     startdir = "../GT_Report"  # 要压缩的文件夹路径

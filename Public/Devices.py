@@ -8,7 +8,7 @@ from Public.ReadConfig import ReadConfig
 from Public.atx_server import ATX_Server
 from tinydb import where
 
-s = ATX_Server(url=ReadConfig().get_host())
+# s = ATX_Server(url=ReadConfig().get_host())
 
 
 class Devices:

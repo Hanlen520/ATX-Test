@@ -53,23 +53,44 @@ def zip_report(name):
 
 
 if __name__ == '__main__':
-    a = ATX_Server(url='http://10.0.34.223:8000')
+    # a = ATX_Server(url='10.0.34.223:8000')
 
-    print('google brand devices')
-    print(a.brand_devices('samsung'))
-    print(a.count())
+    # print('samsung brand devices')
+    # print(a.brand_devices('samsung'))
+    # print(str(a.count())+'\n')
+    #
+    # print('sdk')
+    # print(a.brand_devices(19))
+    # print(a.count())
+    #
+    # print('serial_devices')
+    # serial_devices=a.serial_devices('ce051715b2ef600802')
+    # print(serial_devices)
+    # print(len(serial_devices))
+    #
+    # print('model')
+    # print(a.model_devices('SM-G950F'))
+    # print(a.count())
+    #
+    # print('online')
+    # print(a.online_devices())
 
-    print('sdk')
-    print(a.brand_devices(19))
-    print(a.count())
+    d= u2.connect()
 
-    print('serial_devices')
-    print(a.serial_devices('ce051715b2ef600802'))
-    print(a.count())
+    # monkey_shell = 'CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 3 --uiautomatormix  -v -v'
+    # offline_monkey = 'CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 3 --uiautomatormix  -v -v >/sdcard/monkeyout.txt 2>/sdcard/monkeyerr.txt &'
+    # print(monkey_shell)
+    # # os.system('adb shell '+monkey_shell)
+    # d.adb_shell('ls')
+    # d.adb_shell(shell1)
+    # d.app_start('com.tencent.wstt.gt')
+    # d(resourceId="com.tencent.wstt.gt:id/button_pulldata").click()
+    # d(resourceId="android:id/button2").click()
+    # filename = self.d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
+    # d(resourceId="com.tencent.wstt.gt:id/textView").click()
+    # d(resourceId="android:id/button1").click()
+    GT(d).export_data()
 
-    print('model')
-    print(a.model_devices('SM-G950F'))
-    print(a.count())
 
 
 

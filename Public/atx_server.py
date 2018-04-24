@@ -1,30 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# -*- coding: utf-8 -*-
 """
-stf devices stf_selector
 
 some fields we often use
 ===============================================
 field	     e.g.
-manufacturer OPPO
-version      5.1.1
-display	     {height:1920，width:1080}
-sdk	         22
-serial	     778d4f10
-platform	 android
-mode         Plusm A
+brand        google
+version      6.0.1
+sdk	         23
+serial	     0642f8d6f0ec9d1a
+model        Nexus 5
 ....         ...
 ===============================================
 """
 
 import logging
 
-
 from tinydb import TinyDB, where
 from tinydb.storages import MemoryStorage, JSONStorage
 import requests
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +32,20 @@ class ATX_Server(object):
     According to users requirements to select devices
     """
 
-    def __init__(self, url=None):
+    def __init__(self, url):
         """
         Construct method
         """
         self._db = TinyDB(storage=MemoryStorage)
-        self._url = url+'/list'
+        if url and re.match(r"(http://)?(\d+\.\d+\.\d+\.\d+:\d+)", url):
+            if '://' not in url:
+                url = 'http://' + url + '/list'
+            else:
+                url = url + '/list'
+            self._url = url
+            self.load()
+        else:
+            logger.error('Atx server addr error')
         self.load()
 
     def load(self):
@@ -100,13 +104,13 @@ class ATX_Server(object):
         self._db.purge()
 
     def ready_devices(self):
-        '''标记为ready的设备'''
+        '''查找标记为ready的设备'''
         self.refresh()
         devices = self.find(where('ready') == True).devices()
         return devices
 
     def online_devices(self):
-        '''online 的设备'''
+        '''查找online 的设备'''
         self.refresh()
         devices = self.find(where('present') == True).devices()
         return devices
@@ -130,16 +134,19 @@ class ATX_Server(object):
         devices = self.find(where('sdk') == sdk).devices()
         return devices
 
+    def version_devices(self, version):
+        '''查找特定SDK的设备'''
+        self.refresh()
+        devices = self.find(where('version') == version).devices()
+        return devices
+
     def serial_devices(self, serial):
         '''查找特定serial的设备'''
         self.refresh()
         devices = self.find(where('serial') == serial).devices()
         return devices
 
-# if __name__ == '__main__':
-#     url ='http://10.0.34.223:8000/list'
-#     s = Selector(url)
-#     s.load()
-#     conds = (where('version') == '8.0.0')
-#     device1 =s.find(conds).devices()
-#     print(device1)
+
+if __name__ == '__main__':
+    a = ATX_Server('http://10.0.34.223:8000/')
+    print(a.version_devices('6.0.1'))
