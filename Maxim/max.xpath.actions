@@ -1,17 +1,46 @@
 [
-{
-    "prob": 0.3,
-        "actions": [{
-            "activity":"com.xxx.",
-            "xpath": "//*[@class='android.widget.EditText']",
-            "action": "CLICK",
-            "text": "666666",
-            "throttle": 3000
-        },
-        {
-            "xpath": "//*[@content-desc='登录' and @class='android.view.View' and @clickable='true']",
-            "action": "CLICK",
-            "throttle": 10000
-        }]
-}
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@resource-id='com.quvideo.xiaoying:id/xiaoying_com_btn_left']",
+        "action": "CLICK",
+        "throttle": 200
+      }
+    ]
+  },
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@tet='取消']",
+        "action": "CLICK",
+        "throttle": 10
+      }
+    ]
+  },
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@class='android.view.View']",
+        "index": 0,
+        "action": "SWIPE",
+        "args": "10,1000,800,1000,100",
+        "throttle": 3000
+      }
+    ]
+  },
+  {
+    "prob": 1,
+    "actions": [
+      {
+        "xpath": "//*[@class='android.view.View']",
+        "index": 0,
+        "action": "TOUCH",
+        "args": "500,1000",
+        "throttle": 1000
+      }
+    ]
+  }
 ]

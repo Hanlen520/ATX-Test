@@ -89,7 +89,9 @@ if __name__ == '__main__':
     # filename = self.d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
     # d(resourceId="com.tencent.wstt.gt:id/textView").click()
     # d(resourceId="android:id/button1").click()
-    GT(d).export_data()
+    ime= d.adb_shell('ime list -s')
+    if 'com.android.adbkeyboard/.AdbIME' in ime:
+        d.adb_shell('ime set com.android.adbkeyboard/.AdbIME')
 
 
 

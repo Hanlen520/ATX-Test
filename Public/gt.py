@@ -56,6 +56,7 @@ class GT(object):
         self.quit()
         self.backup_data()
         logger.info('Testing finished>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        self.d.app_stop_all()
         self.export_data()
 
     def backup_data(self):

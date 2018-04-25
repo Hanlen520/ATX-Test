@@ -12,7 +12,7 @@ import time
 class Maxim(object):
     def run_monkey(self, d, cmd, actions=False, widget_black=False):
         '''
-        清理旧的配置文件并运行monkey
+        清理旧的配置文件并运行monkey，等待运行时间后pull log文件到电脑
         :param d: u2.connect()
         :param cmd: shell命令 uiautomatortroy 时 max.xpath.selector文件需要配置正确
         :param actions: 特殊事件序列 max.xpath.actions文件需要配置正确
@@ -20,6 +20,7 @@ class Maxim(object):
         :return:
         '''
         self.clear_env(d)
+        self.set_AdbIME(d)
         self.push_jar(d)
         if 'awl.strings' in cmd:
             self.push_white_list(d)
@@ -32,9 +33,9 @@ class Maxim(object):
         d.adb_shell(cmd)
         logger.info('starting run monkey')
         runtime = cmd.split('running-minutes ')[1].split(' ')[0]
-        logger.info('It will be take about %s minutes,please be patient patient..................' % runtime)
-        time.sleep(int(runtime) * 60 + 40)
-
+        logger.info('It will be take about %s minutes,please be patient patient...........\n................' % runtime)
+        time.sleep(int(runtime) * 60 + 30)
+        self.pull_monkeylog(d)
 
     def command(self, package, runtime, mode=None, whitelist=False, throttle=None, options=None):
         '''
@@ -105,7 +106,7 @@ class Maxim(object):
     def pull_monkeylog(self, d):
         d.pull('/sdcard/monkeyerr.txt', '../GT_Report/monkeyerr.txt')
         d.pull('/sdcard/monkeyout.txt', '../GT_Report/monkeyout.txt')
-        logger.info('pull monkeylog file---> monkeyerr.txt monkeyout.txt  ')
+        logger.info('pull monkeylog file---> monkeyerr.txt monkeyout.txt ')
 
     def clear_env(self, d):
         d.adb_shell('rm -r /sdcard/monkeyerr.txt')
@@ -117,3 +118,11 @@ class Maxim(object):
         d.adb_shell('rm -r /sdcard/monkey.jar')
         d.adb_shell('rm -r /sdcard/framework.jar')
         logger.info('Clear monkey env success')
+
+    def set_AdbIME(self, d):
+        ime = d.adb_shell('ime list -s')
+        if 'com.android.adbkeyboard/.AdbIME' in ime:
+            d.adb_shell('ime set com.android.adbkeyboard/.AdbIME')
+            logger.info('set adbkeyboard as default')
+        else:
+            logger.error('Have not inatall adbkeyboard yet!')
