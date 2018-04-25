@@ -16,6 +16,7 @@ import zipfile
 import os
 import io
 from Public.atx_server import ATX_Server
+from Public.gt import zip_report
 
 u2.DEBUG = True
 
@@ -39,17 +40,6 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
     except:
         return False
 
-def zip_report(name):
-    startdir = "../GT_Report"  # 要压缩的文件夹路径
-    file_news = name + '.zip'  # 压缩后文件夹的名字
-    z = zipfile.ZipFile(file_news, 'w', zipfile.ZIP_DEFLATED)  # 参数一：文件夹名
-    for dirpath, dirnames, filenames in os.walk(startdir):
-        fpath = dirpath.replace(startdir, '')  # 这一句很重要，不replace的话，就从根目录开始复制
-        fpath = fpath and fpath + os.sep or ''  # 这句话理解我也点郁闷，实现当前文件夹以及包含的所有文件的压缩
-        for filename in filenames:
-            z.write(os.path.join(dirpath, filename), fpath + filename)
-            print('压缩成功')
-    z.close()
 
 
 if __name__ == '__main__':
@@ -75,7 +65,7 @@ if __name__ == '__main__':
     # print('online')
     # print(a.online_devices())
 
-    d= u2.connect()
+    # d= u2.connect()
 
     # monkey_shell = 'CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 3 --uiautomatormix  -v -v'
     # offline_monkey = 'CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 3 --uiautomatormix  -v -v >/sdcard/monkeyout.txt 2>/sdcard/monkeyerr.txt &'
@@ -89,9 +79,8 @@ if __name__ == '__main__':
     # filename = self.d(resourceId="com.tencent.wstt.gt:id/textView").get_text()
     # d(resourceId="com.tencent.wstt.gt:id/textView").click()
     # d(resourceId="android:id/button1").click()
-    ime= d.adb_shell('ime list -s')
-    if 'com.android.adbkeyboard/.AdbIME' in ime:
-        d.adb_shell('ime set com.android.adbkeyboard/.AdbIME')
+    # GT(d).export_data()
+    zip_report('2')
 
 
 
