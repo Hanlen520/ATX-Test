@@ -11,6 +11,7 @@ from logzero import logger
 import time
 import zipfile
 import os
+import re
 
 
 class GT(object):
@@ -20,37 +21,45 @@ class GT(object):
         # self._package_name = None
 
     def start_test(self, package_name, cpu=True, net=True, pss=True, jif=False, pri=False, fps=False):
-        # self._package_name = package_name
-        broadcast = self._broadcast
-        # 1. start app
-        self.clean_data()  # clean old data
+        pkgs = re.findall('package:([^\s]+)', self.d.adb_shell('pm', 'list', 'packages', '-3'))
+        if package_name in pkgs:
+            if 'com.tencent.wstt.gt' in pkgs:
+                # self._package_name = package_name
+                broadcast = self._broadcast
+                # 1. start app
+                self.clean_data()  # clean old data
 
-        logger.info('Stopping all running app')
-        self.d.app_stop_all()
+                logger.info('Stopping all running app')
+                self.d.app_stop_all()
+                logger.info('Starting GT Test')
+                self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
+                time.sleep(4)
 
-        logger.info('Starting GT Test')
-        self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
+                # 2. set test package name
+                broadcast('com.tencent.wstt.gt.baseCommand.startTest', '--es', 'pkgName', package_name)
+                # 3. set collect params
+                if cpu:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'cpu', '1')
+                if net:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'net', '1')
+                if pss:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'pss', '1')
+                if jif:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'jif', '1')
+                if pri:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'pri', '1')
+                if fps:
+                    broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'fps', '1')
 
-        # 2. set test package name
-        broadcast('com.tencent.wstt.gt.baseCommand.startTest', '--es', 'pkgName', package_name)
-        # 3. set collect params
-        if cpu:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'cpu', '1')
-        if net:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'net', '1')
-        if pss:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'pss', '1')
-        if jif:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'jif', '1')
-        if pri:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'pri', '1')
-        if fps:
-            broadcast('com.tencent.wstt.gt.baseCommand.sampleData', '--ei', 'fps', '1')
+                # 4. switch back to app
+                logger.info('GT Setup already, starting GT test......')
+                time.sleep(2)
+                self.d.app_start(package_name)
+            else:
+                raise Exception("GT App not installed, please install first!!!")
+        else:
+            raise Exception("There is no package named %s" % package_name)
 
-        # 4. switch back to app
-        logger.info('GT Setup already, starting GT test......')
-        time.sleep(3)
-        # self.d.app_start(package_name)
 
     def stop_test(self):
         '''停止测试，备份测试数据、关闭GT、执行导出js的自动化脚本、执行Pull 将data.js 复制到电脑'''
@@ -108,6 +117,17 @@ class GT(object):
         self.d.pull('/sdcard/GTRData/data.js', dst)
         logger.info('Pull data.js success')
 
+    def unlock_devices(self):
+        '''../apk/unlock.apk install and launch'''
+        pkgs = re.findall('package:([^\s]+)', self.d.adb_shell('pm', 'list', 'packages', '-3'))
+        if 'io.appium.unlock' in pkgs:
+            self.d.app_start('io.appium.unlock')
+            self.d.adb_shell('input keyevent 3')
+        else:
+            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/Maxim_GT/master/apk/unlock.apk')
+            self.d.app_start('io.appium.unlock')
+            self.d.adb_shell('input keyevent 3')
+
 
 def zip_report(name):
     startdir = "../GT_Report"  # 要压缩的文件夹路径
@@ -121,3 +141,4 @@ def zip_report(name):
             z.write(os.path.join(dirpath, filename))
     z.close()
     logger.info('zip report folder success')
+
