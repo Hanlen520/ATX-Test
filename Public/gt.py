@@ -124,7 +124,8 @@ class GT(object):
             self.d.app_start('io.appium.unlock')
             self.d.adb_shell('input keyevent 3')
         else:
-            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/Maxim_GT/master/apk/unlock.apk')
+            #  appium unlock.apk 下载安装
+            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
             self.d.app_start('io.appium.unlock')
             self.d.adb_shell('input keyevent 3')
 
