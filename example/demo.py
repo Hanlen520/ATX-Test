@@ -6,18 +6,9 @@ import sys
 sys.path.append('..')
 
 import time
-from Public.Devices import Devices
+
 import uiautomator2 as u2
-from Public.Base import BasePage
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from Public.gt import GT
-import zipfile
-import os
-import io
-from Public.atx_server import ATX_Server
-from Public.gt import zip_report
-import re
+
 
 u2.DEBUG = True
 
@@ -46,15 +37,20 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 if __name__ == '__main__':
     d = u2.connect()
 
-    pkgs = re.findall('package:([^\s]+)', d.adb_shell('pm', 'list', 'packages', '-3'))
-    process_names = re.findall('([^\s]+)$', d.adb_shell('ps'), re.M)
-    print(pkgs)
-    print(process_names)
+    print(d.info)
+    d.screenshot("home.jpg")
+    import uiautomator2 as u2
+    import uiautomator2.ext.htmlreport as htmlreport
 
-    if 'com.macaca.android.testing.test1' in pkgs:
-        print("tttttt")
-    else:
-        print('eeeeee')
+    u = u2.connect()
+    hrp = htmlreport.HTMLReport(u)
+
+    # take screenshot before each click
+    hrp.patch_click()
+
+    u.click(0.4, 0.6)
+    u.click(0.4, 0.5)
+    u(text="Github").click()  # will also record
 
 
 

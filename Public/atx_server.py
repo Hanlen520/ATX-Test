@@ -107,46 +107,78 @@ class ATX_Server(object):
         '''查找标记为ready的设备'''
         self.refresh()
         devices = self.find(where('ready') == True).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def online_devices(self):
         '''查找online 的设备'''
         self.refresh()
         devices = self.find(where('present') == True).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def model_devices(self, model):
         '''查找特定型号的设备'''
         self.refresh()
         devices = self.find(where('model') == model).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def brand_devices(self, brand):
         '''查找特定品牌的设备'''
         self.refresh()
 
         devices = self.find(where('brand') == brand).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def sdk_devices(self, sdk):
         '''查找特定SDK的设备'''
         self.refresh()
         devices = self.find(where('sdk') == sdk).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def version_devices(self, version):
         '''查找特定SDK的设备'''
         self.refresh()
         devices = self.find(where('version') == version).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
 
     def serial_devices(self, serial):
         '''查找特定serial的设备'''
         self.refresh()
         devices = self.find(where('serial') == serial).devices()
-        return devices
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
+
+def get_device_ip(devices):
+    if devices:
+        ip_list=[]
+        for i in devices:
+            ip_list.append(i['ip'])
+        return ip_list
+    else:
+        logger.error('There is no devices found')
+        return False
+
 
 
 if __name__ == '__main__':
     a = ATX_Server('http://10.0.34.223:8000/')
-    print(a.version_devices('6.0.1'))
+    print(a.serial_devices('ce051715b2ef600802'))
