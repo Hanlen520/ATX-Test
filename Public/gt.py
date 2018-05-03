@@ -17,10 +17,20 @@ import re
 class GT(object):
     def __init__(self, d):
         self.d = d
-        self._broadcast = functools.partial(self.d.adb_shell, 'am', 'broadcast', '-a',)
+        self._broadcast = functools.partial(self.d.adb_shell, 'am', 'broadcast', '-a', )
         # self._package_name = None
 
     def start_test(self, package_name, cpu=True, net=True, pss=True, jif=False, pri=False, fps=False):
+        '''
+        :param package_name: 被测app包名
+        :param cpu: 开启CPU采集
+        :param net: 开启NET网络采集
+        :param pss: 开启PSS内存采集
+        :param jif: 开启CPU时间片采集
+        :param pri: 开启PrivateDirty采集
+        :param fps: 开启FPS采集
+        :return:
+        '''
         pkgs = re.findall('package:([^\s]+)', self.d.adb_shell('pm', 'list', 'packages', '-3'))
         if package_name in pkgs:
             if 'com.tencent.wstt.gt' in pkgs:
@@ -32,7 +42,7 @@ class GT(object):
                 logger.info('Stopping all running app')
                 self.d.app_stop_all()
                 logger.info('Starting GT Test')
-                self.d.app_start('com.tencent.wstt.gt')     # 'com.tencent.wstt.gt.activity.GTMainActivity')
+                self.d.app_start('com.tencent.wstt.gt')  # 'com.tencent.wstt.gt.activity.GTMainActivity')
                 time.sleep(4)
 
                 # 2. set test package name
@@ -60,15 +70,23 @@ class GT(object):
         else:
             raise Exception("There is no package named %s" % package_name)
 
-
-    def stop_test(self):
-        '''停止测试，备份测试数据、关闭GT、执行导出js的自动化脚本、执行Pull 将data.js 复制到电脑'''
+    def stop_test(self, zip=True):
+        '''
+        停止测试，备份测试数据、关闭GT、执行导出js的自动化脚本、执行Pull 将data.js 复制到电脑
+        :param zip: 是否将报告文件夹压缩成zip 默认Ture
+        :return:
+        '''
         self._broadcast('com.tencent.wstt.gt.baseCommand.endTest')
         self.quit()
         self.backup_data()
         logger.info('Testing finished>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         self.d.app_stop_all()
         self.export_data()
+        if zip:
+            zip_report()
+        else:
+            pass
+
 
     def backup_data(self):
         '''备份GTR文件到GTR_Backup'''
@@ -80,7 +98,9 @@ class GT(object):
         '''清除GTR文件'''
         # self._broadcast('com.tencent.wstt.gt.baseCommand.clearData')
         self.d.adb_shell('rm -r sdcard/GTR')
-        logger.info('Clearing GTR file')
+        self.d.adb_shell('rm -r sdcard/GTRData/data.js')
+        logger.info('Clearing GTR file and data.js')
+
 
     def quit(self):
         '''结束GT并退出'''
@@ -99,10 +119,10 @@ class GT(object):
         self.d(resourceId="com.tencent.wstt.gt:id/textView").click()
         self.d(resourceId="android:id/button1").click()
         time.sleep(0.2)  # 点击确定后需要sleep一下才会捕捉到progress
-        f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)  # 等待导出是否结束，最长30分钟
+        f = self.d(resourceId="com.tencent.wstt.gt:id/textView").wait(timeout=1800.0)  # 等待导出结束，最长30分钟
         if f:
             if 'data' in self.d.adb_shell('ls /sdcard/GTRData/'):
-                logger.info('%s exported success' % filename)
+                logger.info('%s exported data success' % filename)
                 self.pull_js()
                 time.sleep(3)
                 self.d.app_stop_all()
@@ -113,9 +133,13 @@ class GT(object):
 
     def pull_js(self, dst='../GT_Report/data/data.js'):
         '''将手机内的data.js复制到电脑'''
-        logger.info('Starting to pull data.js to %s ' % dst)
-        self.d.pull('/sdcard/GTRData/data.js', dst)
-        logger.info('Pull data.js success')
+        if 'data' in self.d.adb_shell('ls /sdcard/GTRData/'):
+            logger.info('Starting to pull data.js to %s ' % os.path.abspath(dst))
+            self.d.pull('/sdcard/GTRData/data.js', dst)
+            logger.info('Pull data.js success')
+            return True
+        else:
+            raise Exception('There is no data.js in /sdcard/GTRData/!  Please check out!')
 
     def unlock_devices(self):
         '''../apk/unlock.apk install and launch'''
@@ -130,16 +154,18 @@ class GT(object):
             self.d.adb_shell('input keyevent 3')
 
 
-def zip_report(name):
+def zip_report():
+    name = 'GTReport ' + time.strftime("%Y-%m-%d %H.%M.%S", time.localtime())
     startdir = "../GT_Report"  # 要压缩的文件夹路径
-    file_news = '../'+ name + '.zip'  # 压缩后文件夹的名字
+    file_news = '../' + name + '.zip'  # 压缩后文件夹的名字
     z = zipfile.ZipFile(file_news, 'w', zipfile.ZIP_DEFLATED)  # 参数一：文件夹名
     for dirpath, dirnames, filenames in os.walk(startdir):
-        # fpath = dirpath.replace(startdir, '')  # 这一句很重要，不replace的话，就从根目录开始复制
-        # fpath = fpath and fpath + os.sep or ''  # 这句话理解我也点郁闷，实现当前文件夹以及包含的所有文件的压缩
+        fpath = dirpath.replace(startdir, '')  # 这一句很重要，不replace的话，就从根目录开始复制
+        fpath = fpath and fpath + os.sep or ''  # 这句话理解我也点郁闷，实现当前文件夹以及包含的所有文件的压缩
         for filename in filenames:
-            # z.write(os.path.join(dirpath, filename), fpath + filename)
-            z.write(os.path.join(dirpath, filename))
+            z.write(os.path.join(dirpath, filename), fpath + filename)
+            # z.write(os.path.join(dirpath, filename))
     z.close()
-    logger.info('zip report folder success')
+    logger.info('Generate zip_report file successful.\n %s' % os.path.abspath(file_news))
+
 

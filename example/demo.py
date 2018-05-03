@@ -8,6 +8,7 @@ sys.path.append('..')
 import time
 
 import uiautomator2 as u2
+from  Public.gt import GT
 
 
 u2.DEBUG = True
@@ -35,22 +36,10 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 
 
 if __name__ == '__main__':
-    d = u2.connect()
+    d = u2.connect('10.0.30.162')
+    GT(d).unlock_devices()
+    GT(d).start_test('')
 
-    print(d.info)
-    d.screenshot("home.jpg")
-    import uiautomator2 as u2
-    import uiautomator2.ext.htmlreport as htmlreport
-
-    u = u2.connect()
-    hrp = htmlreport.HTMLReport(u)
-
-    # take screenshot before each click
-    hrp.patch_click()
-
-    u.click(0.4, 0.6)
-    u.click(0.4, 0.5)
-    u(text="Github").click()  # will also record
 
 
 
