@@ -4,12 +4,12 @@ import sys
 sys.path.append('..')
 import uiautomator2 as u2
 from Public.gt import GT
-from Public.gt import zip_report
+from Public import devices
 import time
 
 
 d = u2.connect('10.0.30.162')
-GT(d).unlock_devices()
+devices.unlock_devices(d)
 # 开始GT
 
 GT(d).start_test('com.gtr.sdkdemo')

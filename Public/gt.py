@@ -83,7 +83,7 @@ class GT(object):
         self.d.app_stop_all()
         self.export_data()
         if zip:
-            zip_report()
+            _zip_report()
         else:
             pass
 
@@ -141,20 +141,20 @@ class GT(object):
         else:
             raise Exception('There is no data.js in /sdcard/GTRData/!  Please check out!')
 
-    def unlock_devices(self):
-        '''../apk/unlock.apk install and launch'''
-        pkgs = re.findall('package:([^\s]+)', self.d.adb_shell('pm', 'list', 'packages', '-3'))
-        if 'io.appium.unlock' in pkgs:
-            self.d.app_start('io.appium.unlock')
-            self.d.adb_shell('input keyevent 3')
-        else:
-            #  appium unlock.apk 下载安装
-            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
-            self.d.app_start('io.appium.unlock')
-            self.d.adb_shell('input keyevent 3')
+    # def unlock_devices(self):
+    #     '''../apk/unlock.apk install and launch'''
+    #     pkgs = re.findall('package:([^\s]+)', self.d.adb_shell('pm', 'list', 'packages', '-3'))
+    #     if 'io.appium.unlock' in pkgs:
+    #         self.d.app_start('io.appium.unlock')
+    #         self.d.adb_shell('input keyevent 3')
+    #     else:
+    #         #  appium unlock.apk 下载安装
+    #         self.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
+    #         self.d.app_start('io.appium.unlock')
+    #         self.d.adb_shell('input keyevent 3')
 
 
-def zip_report():
+def _zip_report():
     name = 'GTReport ' + time.strftime("%Y-%m-%d %H.%M.%S", time.localtime())
     startdir = "../GT_Report"  # 要压缩的文件夹路径
     file_news = '../' + name + '.zip'  # 压缩后文件夹的名字

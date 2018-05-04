@@ -167,9 +167,19 @@ class ATX_Server(object):
         else:
             return False
 
+    def all_devices(self):
+        '''查找特定serial的设备'''
+        self.refresh()
+        devices = self.find().devices()
+        if len(devices) > 0:
+            return devices
+        else:
+            return False
+
+
 def get_device_ip(devices):
     if devices:
-        ip_list=[]
+        ip_list = []
         for i in devices:
             ip_list.append(i['ip'])
         return ip_list
@@ -179,6 +189,6 @@ def get_device_ip(devices):
 
 
 
-if __name__ == '__main__':
-    a = ATX_Server('http://10.0.34.223:8000/')
-    print(a.serial_devices('ce051715b2ef600802'))
+# if __name__ == '__main__':
+#     a = ATX_Server('http://10.0.34.223:8000/')
+#     print(a.serial_devices('ce051715b2ef600802'))

@@ -9,6 +9,7 @@ import time
 
 import uiautomator2 as u2
 from  Public.gt import GT
+from Public import devices
 
 
 u2.DEBUG = True
@@ -37,8 +38,15 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 
 if __name__ == '__main__':
     d = u2.connect('10.0.30.162')
-    GT(d).unlock_devices()
-    GT(d).start_test('')
+    # GT(d).unlock_devices()
+    # GT(d).start_test('')
+    # print(devices.get_current_app(d))
+    # d.open_identify(theme='black')
+    # print(d.info)
+
+    # d.open_identify(theme='red')
+    print(devices.get_current_app(d))
+    print(d.current_app())
 
 
 

@@ -3,8 +3,12 @@
 from Public.atx_server import ATX_Server
 from Public.atx_server import get_device_ip
 from tinydb import where
+import uiautomator2 as u2
+from Public import devices
+from multiprocessing import Pool
+import time
 
-url ='10.0.34.223:8000'
+url = '10.0.34.223:8000'
 s = ATX_Server(url)
 
 # print('devices list ------------')
@@ -24,6 +28,34 @@ s = ATX_Server(url)
 # print(s.model_devices('SM-G530H'))
 #
 # print(s.sdk_devices('19'))
+ip_list = get_device_ip(s.online_devices())
+print(ip_list)
 
-a=s.sdk_devices('18')
-print(get_device_ip(a))
+
+def idntiofy_devices(ip):
+    d = u2.connect(ip)
+    devices.keep_identify(d)
+
+    # print(ip_list)
+    # devices_list =[]
+    # for ip in ip_list:
+    #     devices_list.append(u2.connect(ip))
+    # print(devices_list)
+    # for d in devices_list:
+    #     devices.keep_identify(d)
+
+
+if __name__ == '__main__':
+    ip_list = get_device_ip(s.online_devices())
+    print(ip_list)
+
+    # p = Pool(len(ip_list))
+    p = Pool(8)
+    for i in range(len(ip_list)):
+        print(i)
+        p.apply_async(idntiofy_devices, args=(ip_list[i],))
+        # time.sleep(4)
+    print('Waiting for all subprocesses done...')
+    p.close()
+    p.join()
+    print('All subprocesses done.')
