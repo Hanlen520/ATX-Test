@@ -19,6 +19,7 @@ GT(d).start_test('com.gtr.sdkdemo')
 time.sleep(1000)
 #
 #
+d.shell()
 # 结束GT
 GT(d).stop_test(zip=True)
 
