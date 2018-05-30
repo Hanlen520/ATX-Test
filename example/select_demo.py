@@ -8,7 +8,7 @@ from Public import devices
 from multiprocessing import Pool
 import time
 
-url = '10.0.34.223:8000'
+url = 'http://10.0.34.75:8000/'
 s = ATX_Server(url)
 
 # print('devices list ------------')
