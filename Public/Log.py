@@ -4,7 +4,7 @@ import logging
 class Log:
     @classmethod
     def set_logger(cls, udid, file):
-        logger = logging.getLogger('MACACA')
+        logger = logging.getLogger('ATX')
         logger.setLevel(logging.INFO)
 
         fh = logging.FileHandler(file)

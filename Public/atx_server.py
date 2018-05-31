@@ -190,7 +190,7 @@ def get_device_ip(devices):
 
 
 if __name__ == '__main__':
-    s = ATX_Server('192.168.31.192:8000')
+    s = ATX_Server('http://10.0.34.75:8000/')
     print(s.devices())
     print(s.all_devices())
     print(s.online_devices())

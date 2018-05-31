@@ -2,64 +2,82 @@ import os
 import time
 
 import uiautomator2 as u2
-
-
+import re
 
 class BasePage(object):
     @classmethod
     def set_driver(cls, dri):
-        cls.driver = u2.connect()
-        # cls.driver = u2.connect(dri)
+        # cls.driver = u2.connect()
+        cls.d = u2.connect(dri)
 
     def get_driver(self):
-        return self.driver
+        return self.d
 
-    # def _get_window_size(self):
-    #     window = self.driver.window_size()
-    #     y = window['height']
-    #     x = window['width']
-    #
-    #     return x, y
-    #
-    # @staticmethod
-    # def _get_element_size(element):
-    #     rect = element.rect
-    #
-    #     x_center = rect['x'] + rect['width'] / 2
-    #     y_center = rect['y'] + rect['height'] / 2
-    #     x_left = rect['x']
-    #     y_up = rect['y']
-    #     x_right = rect['x'] + rect['width']
-    #     y_down = rect['y'] + rect['height']
-    #
-    #     return x_left, y_up, x_center, y_center, x_right, y_down
-    #
-    # def _swipe(self, fromX, fromY, toX, toY, steps):
-    #     self.driver \
-    #         .touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'steps': steps})
-    #
-    # def swipe_up(self, element=None, steps=10):
-    #     """
-    #     swipe up
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :return: None
-    #     """
-    #     if element:
-    #         x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
-    #
-    #         fromX = x_center
-    #         fromY = y_center
-    #         toX = x_center
-    #         toY = y_up
-    #     else:
-    #         x, y = self._get_window_size()
-    #         fromX = 0.5*x
-    #         fromY = 0.5*y
-    #         toX = 0.5*x
-    #         toY = 0.25*y
-    #
-    #     self._swipe(fromX, fromY, toX, toY, steps)
+    @classmethod
+    def unlock_device(self):
+        '''../apk/unlock.apk install and launch'''
+        pkgs= re.findall('package:([^\s]+)', self.d.shell(['pm', 'list', 'packages', '-3'])[0])
+        if 'io.appium.unlock' in pkgs:
+            self.d.app_start('io.appium.unlock')
+            self.d.shell('input keyevent 3')
+        else:
+            #  appium unlock.apk 下载安装
+            print('installing io.appium.unlock')
+            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
+            self.d.app_start('io.appium.unlock')
+            self.d.shell('input keyevent 3')
+
+    def back(self):
+        '''点击返回'''
+        self.d.press('back')
+
+
+
+    def _get_window_size(self):
+        window = self.d.window_size()
+        y = window[0]
+        x = window[1]
+        return x, y
+
+    @staticmethod
+    def _get_element_size(element):
+        rect = element.info['bounds']
+
+        x_center = rect['x'] + rect['width'] / 2
+        y_center = rect['y'] + rect['height'] / 2
+        x_left = rect['x']
+        y_up = rect['y']
+        x_right = rect['x'] + rect['width']
+        y_down = rect['y'] + rect['height']
+
+        return x_left, y_up, x_center, y_center, x_right, y_down
+
+    def _swipe(self, fromX, fromY, toX, toY, steps):
+        self.driver \
+            .touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'steps': steps})
+
+    def swipe_up(self, element=None, steps=10):
+        """
+        swipe up
+        :param element: WebElement of Macaca, if None while swipe window of phone
+        :param steps: steps of swipe for Android, The lower the faster
+        :return: None
+        """
+        if element:
+            x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
+
+            fromX = x_center
+            fromY = y_center
+            toX = x_center
+            toY = y_up
+        else:
+            x, y = self._get_window_size()
+            fromX = 0.5*x
+            fromY = 0.5*y
+            toX = 0.5*x
+            toY = 0.25*y
+
+        self._swipe(fromX, fromY, toX, toY, steps)
     #
     # def swipe_down(self, element=None, steps=10):
     #     """

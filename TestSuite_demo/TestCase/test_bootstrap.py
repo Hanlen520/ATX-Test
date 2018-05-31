@@ -12,7 +12,8 @@ from Public.Decorator import *
 # from Public.Decorator import testcase
 
 
-class TestCloudMusic(unittest.TestCase, BasePage):
+class TestBootStrap(unittest.TestCase, BasePage):
+    '''BootStrap demo测试'''
     @classmethod
     @setupclass
     def setUpClass(cls):
@@ -21,51 +22,63 @@ class TestCloudMusic(unittest.TestCase, BasePage):
         # hrp = htmlreport.HTMLReport(cls.u, 'report')
         # hrp.patch_click()
 
-        # cls.driver= BasePage().get_driver()
-        cls.driver.app_stop_all()
+        # cls.d = BasePage()
+        cls.unlock_device()
+        cls.d.make_toast("开始测试", 3)
+        cls.d.app_stop("com.github.android_app_bootstrap")
+        cls.d.set_fastinput_ime(True)
         # cls.driver.app_stop_all()
-        cls.driver.app_start("com.github.android_app_bootstrap")  # restart app
+        cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         # pass
 
     @classmethod
     @teardownclass
     def tearDownClass(cls):
         # pass
-        #  cls.driver.make_toast("测试结束", 3)
-        # cls.driver = BasePage().get_driver()
-        # cls.driver.app_stop_all()
-        # cls.driver.service(
-        #     "uiautomator").stop()  # 停止uiautomator守护程序，允许其他测试框架如 appium 运行
-        pass
+        cls.d.make_toast("测试结束", 3)
+        cls.d.set_fastinput_ime(False)
+        # cls.driver.service("uiautomator").stop()  # 停止uiautomator守护程序，允许其他测试框架如 appium 运行
+        cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
 
     @setup
     def setUp(self):
 
         #
-        time.sleep(5)  # 等待首页广告结束
+        time.sleep(3)  # 等待首页广告结束
         # pass
 
     @teardown
     def tearDown(self):
-        self.driver.app_stop("com.github.android_app_bootstrap")  # restart app
+
         pass
 
     @testcase
-    def testPrivateFM(self):  # 私人FM
-        self.driver(text='Login').click()
+    def test_01_login(self):
+        '''点击登录'''
+        self.d(resourceId="com.github.android_app_bootstrap:id/mobileNoEditText").set_text("中文+Test+12345678")
+        self.d(resourceId="com.github.android_app_bootstrap:id/codeEditText").set_text("111112")
+        self.d(text='Login').click()
+        time.sleep(2)
 
 
     @testcase
-    def testRecommendEveryday(self):  # 每日推荐
-        self.driver(text='Login').click()
-        self.driver(text='Baidu').click()
+    def test_02_scroll_tableview(self):
+        '''弹窗'''
+        self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
+        self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
+        self.d(text='Alert').click()
+        self.d(text='yes').click()
+        self.back()
+
+        time.sleep(2)
 
     @testcase
-    def testZZZZZ(self):  # 每日推荐
-        self.driver(text='Login').click()
-
-        self.driver(text='HOME').click()
-        self.driver(text='PERSONAL').click()
+    def test_03_ZZZZZ(self):
+        '''主页、个人 再点login'''
+        self.back()
+        self.d(text='HOME').click()
+        self.d(text='PERSONAL').click()
+        self.d(text='Logout').click()
         time.sleep(3)
 
 

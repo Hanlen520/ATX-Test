@@ -6,6 +6,7 @@ import sys
 sys.path.append('..')
 
 import time
+import re
 
 import uiautomator2 as u2
 import uiautomator2.ext.htmlreport as htmlreport
@@ -38,7 +39,7 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 
 
 if __name__ == '__main__':
-    d = u2.connect('10.0.30.162')
+    d = u2.connect('10.0.31.63')
     # GT(d).unlock_devices()
     # GT(d).start_test('')
     # print(devices.get_current_app(d))
@@ -46,8 +47,20 @@ if __name__ == '__main__':
     # print(d.info)
 
     # d.open_identify(theme='red')
-    print(devices.get_current_app(d))
-    print(d.current_app())
+    # print(devices.get_current_app(d))
+    # print(d.current_app())
+    # print(d.window_size())
+
+    shell1 = d.adb_shell('pm', 'list', 'packages', '-3')
+    print(shell1)
+    shell2 = d.shell(['pm', 'list', 'packages', '-3'])
+    print(shell2)
+    pkgs= re.findall('package:([^\s]+)', d.shell('pm list packages -3')[0])
+    print(pkgs)
+    s=d.shell('input keyevent 3')
+    print(s)
+
+
 
 
 
