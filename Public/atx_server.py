@@ -189,6 +189,8 @@ def get_device_ip(devices):
 
 
 
-# if __name__ == '__main__':
-#     a = ATX_Server('http://10.0.34.223:8000/')
-#     print(a.serial_devices('ce051715b2ef600802'))
+if __name__ == '__main__':
+    s = ATX_Server('192.168.31.192:8000')
+    print(s.devices())
+    print(s.all_devices())
+    print(s.online_devices())
