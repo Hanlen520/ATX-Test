@@ -8,6 +8,7 @@ sys.path.append('..')
 import time
 
 import uiautomator2 as u2
+import uiautomator2.ext.htmlreport as htmlreport
 from  Public.gt import GT
 from Public import devices
 

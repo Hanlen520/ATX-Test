@@ -8,21 +8,19 @@ from Public import devices
 import time
 
 
-d = u2.connect('10.0.31.63')
-# d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
+d = u2.connect('10.0.30.162')
 devices.unlock_devices(d)
-# # 开始GT
-#
+# 开始GT
+
 GT(d).start_test('com.gtr.sdkdemo')
-# # # os.system('adb shell monkey --throttle 1000 -s 53 --pct-anyevent 0 --pct-nav 0 --pct-touch 44 -p com.quvideo.xiaoying --pct-motion 30 --pct-trackball 8 --pct-syskeys 8 --pct-majornav 0 --pct-appswitch 10 --pct-flip 0 --monitor-native-crashes -v -v 10000')
-# # # monkey_shell ='CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 20 --uiautomatormix --throttle 100 -v -v >/sdcard/monkeyout.txt 2>/sdcard/monkeyerr.txt &'
-# #
-# time.sleep(1000)
-# #
-# #
-cmd = 'monkey --throttle 1000 -s 53 --pct-anyevent 0 --pct-nav 0 --pct-touch 44 -p com.quvideo.xiaoying --pct-motion 30 --pct-trackball 8 --pct-syskeys 8 --pct-majornav 0 --pct-appswitch 10 --pct-flip 0 --monitor-native-crashes -v -v 1000'
-d.shell(cmd, stream=True)
-# # 结束GT
+# # os.system('adb shell monkey --throttle 1000 -s 53 --pct-anyevent 0 --pct-nav 0 --pct-touch 44 -p com.quvideo.xiaoying --pct-motion 30 --pct-trackball 8 --pct-syskeys 8 --pct-majornav 0 --pct-appswitch 10 --pct-flip 0 --monitor-native-crashes -v -v 10000')
+# # monkey_shell ='CLASSPATH=/sdcard/monkey.jar:/sdcard/framework.jar exec app_process /system/bin tv.panda.test.monkey.Monkey -p com.quvideo.xiaoying --running-minutes 20 --uiautomatormix --throttle 100 -v -v >/sdcard/monkeyout.txt 2>/sdcard/monkeyerr.txt &'
+#
+time.sleep(1000)
+#
+#
+d.shell()
+# 结束GT
 GT(d).stop_test(zip=True)
 
 
