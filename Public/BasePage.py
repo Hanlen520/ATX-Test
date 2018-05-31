@@ -4,6 +4,7 @@ import time
 import uiautomator2 as u2
 import re
 
+
 class BasePage(object):
     @classmethod
     def set_driver(cls, dri):
@@ -15,8 +16,8 @@ class BasePage(object):
 
     @classmethod
     def unlock_device(self):
-        '''../apk/unlock.apk install and launch'''
-        pkgs= re.findall('package:([^\s]+)', self.d.shell(['pm', 'list', 'packages', '-3'])[0])
+        '''unlock.apk install and launch'''
+        pkgs = re.findall('package:([^\s]+)', self.d.shell(['pm', 'list', 'packages', '-3'])[0])
         if 'io.appium.unlock' in pkgs:
             self.d.app_start('io.appium.unlock')
             self.d.shell('input keyevent 3')
@@ -30,8 +31,6 @@ class BasePage(object):
     def back(self):
         '''点击返回'''
         self.d.press('back')
-
-
 
     def _get_window_size(self):
         window = self.d.window_size()
@@ -72,10 +71,10 @@ class BasePage(object):
             toY = y_up
         else:
             x, y = self._get_window_size()
-            fromX = 0.5*x
-            fromY = 0.5*y
-            toX = 0.5*x
-            toY = 0.25*y
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.5 * x
+            toY = 0.25 * y
 
         self._swipe(fromX, fromY, toX, toY, steps)
     #

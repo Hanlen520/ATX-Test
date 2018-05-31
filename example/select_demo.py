@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from Public.atx_server import ATX_Server
-from Public.atx_server import get_device_ip
+from Public.ATX_Server import ATX_Server
+from Public.ATX_Server import get_device_ip
 from tinydb import where
 import uiautomator2 as u2
 from Public import devices

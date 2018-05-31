@@ -2,17 +2,18 @@ import time
 
 from multiprocessing import Pool
 import uiautomator2 as u2
-from Public.atx_server import ATX_Server
+from Public.ATX_Server import ATX_Server
 from Public.RunCases import RunCases
 from Public.ReportPath import ReportPath
 from Public.BasePage import BasePage
 from Public.Log import Log
+from Public.ReadConfig import ReadConfig
 
 
 # from App.PageObject.WizardPage import skip_wizard_to_home
 
 
-url = '10.0.34.75:8000'
+url = ReadConfig().get_host()
 
 class Drivers:
     @staticmethod
