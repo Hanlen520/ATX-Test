@@ -12,9 +12,11 @@ import uiautomator2 as u2
 import uiautomator2.ext.htmlreport as htmlreport
 from  Public.gt import GT
 from Public import devices
+from Public.BasePage import BasePage
+from Public.ReadConfig import ReadConfig
 
 
-u2.DEBUG = True
+# u2.DEBUG = True
 
 
 def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
@@ -37,28 +39,19 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
         return False
 
 
-
 if __name__ == '__main__':
-    d = u2.connect('10.0.31.63')
-    # GT(d).unlock_devices()
-    # GT(d).start_test('')
-    # print(devices.get_current_app(d))
-    # d.open_identify(theme='black')
-    # print(d.info)
+    # base_page =BasePage()
+    # base_page.set_driver('192.168.31.153')
+    # d = base_page.get_driver()
+    # ele1 = base_page.find_element_by_swipe_up(value=d(text='开发者选项'))
+    # print(ele1.info)
+    # ele1.click()
+    devices =ReadConfig().get_devices()
+    print(devices)
 
-    # d.open_identify(theme='red')
-    # print(devices.get_current_app(d))
-    # print(d.current_app())
-    # print(d.window_size())
 
-    shell1 = d.adb_shell('pm', 'list', 'packages', '-3')
-    print(shell1)
-    shell2 = d.shell(['pm', 'list', 'packages', '-3'])
-    print(shell2)
-    pkgs= re.findall('package:([^\s]+)', d.shell('pm list packages -3')[0])
-    print(pkgs)
-    s=d.shell('input keyevent 3')
-    print(s)
+
+
 
 
 

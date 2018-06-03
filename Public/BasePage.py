@@ -2,8 +2,11 @@ import os
 import time
 
 import uiautomator2 as u2
+from uiautomator2 import UiObjectNotFoundError
 import re
 
+
+# u2.DEBUG = True
 
 class BasePage(object):
     @classmethod
@@ -34,37 +37,37 @@ class BasePage(object):
 
     def _get_window_size(self):
         window = self.d.window_size()
-        y = window[0]
-        x = window[1]
+        x = window[0]
+        y = window[1]
         return x, y
 
     @staticmethod
     def _get_element_size(element):
+        # rect = element.info['visibleBounds']
         rect = element.info['bounds']
-
-        x_center = rect['x'] + rect['width'] / 2
-        y_center = rect['y'] + rect['height'] / 2
-        x_left = rect['x']
-        y_up = rect['y']
-        x_right = rect['x'] + rect['width']
-        y_down = rect['y'] + rect['height']
+        print(rect)
+        x_center = (rect['left'] + rect['right']) / 2
+        y_center = (rect['bottom'] + rect['top']) / 2
+        x_left = rect['left']
+        y_up = rect['top']
+        x_right = rect['right']
+        y_down = rect['bottom']
 
         return x_left, y_up, x_center, y_center, x_right, y_down
 
+    @classmethod
     def _swipe(self, fromX, fromY, toX, toY, steps):
-        self.driver \
-            .touch('drag', {'fromX': fromX, 'fromY': fromY, 'toX': toX, 'toY': toY, 'steps': steps})
+        self.d.swipe(fromX, fromY, toX, toY, steps)
 
-    def swipe_up(self, element=None, steps=10):
+    def swipe_up(self, element=None, steps=0.2):
         """
         swipe up
-        :param element: WebElement of Macaca, if None while swipe window of phone
+        :param element: UI element, if None while swipe window of phone
         :param steps: steps of swipe for Android, The lower the faster
         :return: None
         """
         if element:
             x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
-
             fromX = x_center
             fromY = y_center
             toX = x_center
@@ -74,177 +77,119 @@ class BasePage(object):
             fromX = 0.5 * x
             fromY = 0.5 * y
             toX = 0.5 * x
-            toY = 0.25 * y
+            toY = 0.2 * y
 
         self._swipe(fromX, fromY, toX, toY, steps)
-    #
-    # def swipe_down(self, element=None, steps=10):
-    #     """
-    #     swipe down
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :return: None
-    #     """
-    #     if element:
-    #         x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
-    #
-    #         fromX = x_center
-    #         fromY = y_center
-    #         toX = x_center
-    #         toY = y_down
-    #     else:
-    #         x, y = self._get_window_size()
-    #         fromX = 0.5*x
-    #         fromY = 0.5*y
-    #         toX = 0.5*x
-    #         toY = 0.75*y
-    #
-    #     self._swipe(fromX, fromY, toX, toY, steps)
-    #
-    # def swipe_left(self, element=None, steps=10):
-    #     """
-    #     swipe left
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :return: None
-    #     """
-    #     if element:
-    #         x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
-    #
-    #         fromX = x_center
-    #         fromY = y_center
-    #         toX = x_left
-    #         toY = y_center
-    #     else:
-    #         x, y = self._get_window_size()
-    #         fromX = 0.5*x
-    #         fromY = 0.5*y
-    #         toX = 0.25*x
-    #         toY = 0.5*y
-    #
-    #     self._swipe(fromX, fromY, toX, toY, steps)
-    #
-    # def swipe_right(self, element=None, steps=10):
-    #     """
-    #     swipe right
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :return: None
-    #     """
-    #     if element:
-    #         x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
-    #
-    #         fromX = x_center
-    #         fromY = y_center
-    #         toX = x_right
-    #         toY = y_center
-    #     else:
-    #         x, y = self._get_window_size()
-    #         fromX = 0.5*x
-    #         fromY = 0.5*y
-    #         toX = 0.75*x
-    #         toY = 0.5*y
-    #
-    #     self._swipe(fromX, fromY, toX, toY, steps)
-    #
-    # def _find_element_by_swipe(self, direction, using, value, element=None, steps=10, max_swipe=6):
-    #     times = max_swipe
-    #
-    #     stability_width = 0
-    #     stability_height = 0
-    #     for i in range(times):
-    #         try:
-    #             e = self.driver.element(using, value)
-    #
-    #             width = e.rect['width']
-    #             height = e.rect['height']
-    #             if stability_width != width or stability_height != height:
-    #                 stability_width = width
-    #                 stability_height = height
-    #                 raise WebDriverException
-    #             else:
-    #                 return e
-    #         except WebDriverException:
-    #             if direction == 'up':
-    #                 self.swipe_up(element=element, steps=steps)
-    #             elif direction == 'down':
-    #                 self.swipe_down(element=element, steps=steps)
-    #             elif direction == 'left':
-    #                 self.swipe_left(element=element, steps=steps)
-    #             elif direction == 'right':
-    #                 self.swipe_right(element=element, steps=steps)
-    #
-    #             if i == times - 1:
-    #                 raise WebDriverException
-    #
-    # def find_element_by_swipe_up(self, using, value, element=None, steps=10, max_swipe=6):
-    #     """
-    #     find element by swipe up
-    #     :param using: The element location strategy.
-    #                   "id","xpath","link text","partial link text","name","tag name","class name","css selector"
-    #     :param value: The value of the location strategy.
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :param max_swipe: the max times of swipe
-    #     :return: WebElement of Macaca
-    #
-    #     Raises:
-    #         WebDriverException.
-    #     """
-    #     return self._find_element_by_swipe('up', using, value,
-    #                                        element=element, steps=steps, max_swipe=max_swipe)
-    #
-    # def find_element_by_swipe_down(self, using, value, element=None, steps=10, max_swipe=6):
-    #     """
-    #     find element by swipe down
-    #     :param using: The element location strategy.
-    #                   "id","xpath","link text","partial link text","name","tag name","class name","css selector"
-    #     :param value: The value of the location strategy.
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :param max_swipe: the max times of swipe
-    #     :return: WebElement of Macaca
-    #
-    #     Raises:
-    #         WebDriverException.
-    #     """
-    #     return self._find_element_by_swipe('down', using, value,
-    #                                        element=element, steps=steps, max_swipe=max_swipe)
-    #
-    # def find_element_by_swipe_left(self, using, value, element=None, steps=10, max_swipe=6):
-    #     """
-    #     find element by swipe left
-    #     :param using: The element location strategy.
-    #                   "id","xpath","link text","partial link text","name","tag name","class name","css selector"
-    #     :param value: The value of the location strategy.
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :param max_swipe: the max times of swipe
-    #     :return: WebElement of Macaca
-    #
-    #     Raises:
-    #         WebDriverException.
-    #     """
-    #     return self._find_element_by_swipe('left', using, value,
-    #                                        element=element, steps=steps, max_swipe=max_swipe)
-    #
-    # def find_element_by_swipe_right(self, using, value, element=None, steps=10, max_swipe=6):
-    #     """
-    #     find element by swipe right
-    #     :param using: The element location strategy.
-    #                   "id","xpath","link text","partial link text","name","tag name","class name","css selector"
-    #     :param value: The value of the location strategy.
-    #     :param element: WebElement of Macaca, if None while swipe window of phone
-    #     :param steps: steps of swipe for Android, The lower the faster
-    #     :param max_swipe: the max times of swipe
-    #     :return: WebElement of Macaca
-    #
-    #     Raises:
-    #         WebDriverException.
-    #     """
-    #     return self._find_element_by_swipe('right', using, value,
-    #                                        element=element, steps=steps, max_swipe=max_swipe)
-    #
+
+    def swipe_down(self, element=None, steps=0.2):
+        """
+        swipe down
+        :param element: UI element, if None while swipe window of phone
+        :param steps: steps of swipe for Android, The lower the faster
+        :return: None
+        """
+        if element:
+            x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
+
+            fromX = x_center
+            fromY = y_center
+            toX = x_center
+            toY = y_down
+        else:
+            x, y = self._get_window_size()
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.5 * x
+            toY = 0.8 * y
+
+        self._swipe(fromX, fromY, toX, toY, steps)
+
+    def swipe_left(self, element=None, steps=0.2):
+        """
+        swipe left
+        :param element: UI element, if None while swipe window of phone
+        :param steps: steps of swipe for Android, The lower the faster
+        :return: None
+        """
+        if element:
+            x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
+            fromX = x_center
+            fromY = y_center
+            toX = x_left
+            toY = y_center
+        else:
+            x, y = self._get_window_size()
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.2 * x
+            toY = 0.5 * y
+        self._swipe(fromX, fromY, toX, toY, steps)
+
+    def swipe_right(self, element=None, steps=0.2):
+        """
+        swipe right
+        :param element: UI element, if None while swipe window of phone
+        :param steps: steps of swipe for Android, The lower the faster
+        :return: None
+        """
+        if element:
+            x_left, y_up, x_center, y_center, x_right, y_down = self._get_element_size(element)
+            fromX = x_center
+            fromY = y_center
+            toX = x_right
+            toY = y_center
+        else:
+            x, y = self._get_window_size()
+            fromX = 0.5 * x
+            fromY = 0.5 * y
+            toX = 0.8 * x
+            toY = 0.5 * y
+        self._swipe(fromX, fromY, toX, toY, steps)
+
+    def _find_element_by_swipe(self, direction, value, element=None, steps=0.5, max_swipe=6):
+        """
+        :param direction: swip direction exp: right left up down
+        :param value: The value of the UI element location strategy. exp: d(text='Logina')
+        :param element: UI element, if None while swipe window of phone
+        :param steps: steps of swipe for Android, The lower the faster
+        :param max_swipe: the max times of swipe
+        :return: UI element
+        """
+        times = max_swipe
+        for i in range(times):
+            try:
+                if value.exists:
+                    return value
+                else:
+                    raise UiObjectNotFoundError
+            except UiObjectNotFoundError:
+                if direction == 'up':
+                    self.swipe_up(element=element, steps=steps)
+                elif direction == 'down':
+                    self.swipe_down(element=element, steps=steps)
+                elif direction == 'left':
+                    self.swipe_left(element=element, steps=steps)
+                elif direction == 'right':
+                    self.swipe_right(element=element, steps=steps)
+                if i == times - 1:
+                    raise UiObjectNotFoundError
+
+    def find_element_by_swipe_up(self, value, element=None, steps=0.2, max_swipe=6):
+        return self._find_element_by_swipe('up', value,
+                                           element=element, steps=steps, max_swipe=max_swipe)
+
+    def find_element_by_swipe_down(self, value, element=None, steps=0.2, max_swipe=6):
+        return self._find_element_by_swipe('down', value,
+                                           element=element, steps=steps, max_swipe=max_swipe)
+
+    def find_element_by_swipe_left(self, value, element=None, steps=0.2, max_swipe=6):
+        return self._find_element_by_swipe('left', value,
+                                           element=element, steps=steps, max_swipe=max_swipe)
+
+    def find_element_by_swipe_right(self, value, element=None, steps=0.2, max_swipe=6):
+        return self._find_element_by_swipe('right', value,
+                                           element=element, steps=steps, max_swipe=max_swipe)
+
     # def find_element_on_horizontal(self, using, value, element=None, steps=10, max_swipe=6):
     #     """
     #     find element on horizontal

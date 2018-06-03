@@ -10,7 +10,6 @@ configPath = os.path.join(proDir, "config.ini")
 #将多个路径组合后返回
 
 class ReadConfig:
-
     def __init__(self):
         self.cf = configparser.ConfigParser()
         self.cf.read(configPath, encoding='UTF-8')
@@ -22,6 +21,10 @@ class ReadConfig:
     def get_host(self):
         value = self.cf.get("ATXSERVER", "host")
         return value
+
+    def get_devices(self):
+        value = self.cf.get("ATXSERVER", "devices")
+        return value.split('/')
 
     def get_db(self, name):
         value = self.cf.get("DATABASE", name)
