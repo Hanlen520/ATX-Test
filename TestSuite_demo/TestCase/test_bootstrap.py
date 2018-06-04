@@ -7,11 +7,9 @@ import uiautomator2 as u2
 import time
 from Public.BasePage import BasePage
 from Public.Decorator import *
-# from PageObject.LoginPage import LoginPage
 from PageObject import LoginPage
 from PageObject.HomePage import HomePage
 import unittest
-from uiautomator2 import UiObjectNotFoundError
 
 
 class TestBootStrap(unittest.TestCase, BasePage):
@@ -26,9 +24,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         cls.d.set_fastinput_ime(True)
         # cls.driver.app_stop_all()
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
-        # cls.login_page = LoginPage.LoginPage()
-        # cls.home_page = HomePage()
-        # pass
+
 
     @classmethod
     @teardownclass
@@ -51,7 +47,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @testcase
     def test_01_login(self):
         '''登录'''
-        print(LoginPage.LoginPage().wait_page())
+        LoginPage.LoginPage().wait_page()
         LoginPage.login('1234', '5678')
         time.sleep(2)
 
