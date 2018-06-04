@@ -17,10 +17,10 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
-        cls.unlock_device()
+        # cls.unlock_device()
         # cls.d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
-        cls.d.make_toast("开始测试", 3)
-        cls.d.app_stop("com.github.android_app_bootstrap")
+        # cls.d.make_toast("开始测试", 3)
+        # cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.set_fastinput_ime(True)
         # cls.driver.app_stop_all()
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app

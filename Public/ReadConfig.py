@@ -26,10 +26,14 @@ class ReadConfig:
         value = self.cf.get("ATXSERVER", "devices")
         return value.split('/')
 
-    def get_db(self, name):
-        value = self.cf.get("DATABASE", name)
+    def get_apk_url(self):
+        value = self.cf.get("APP", "apk_url")
         return value
 
-# if __name__ == '__main__':
-#     print(ReadConfig().get_command())
-#     print(ReadConfig().get_host())
+    def get_pkg_name(self):
+        value = self.cf.get("APP", "pkg_name")
+        return value
+
+if __name__ == '__main__':
+    print(ReadConfig().get_pkg_name())
+    print(ReadConfig().get_apk_url())

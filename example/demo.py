@@ -40,14 +40,12 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 
 
 if __name__ == '__main__':
-    # base_page =BasePage()
-    # base_page.set_driver('192.168.31.153')
-    # d = base_page.get_driver()
-    # ele1 = base_page.find_element_by_swipe_up(value=d(text='开发者选项'))
-    # print(ele1.info)
-    # ele1.click()
-    devices =ReadConfig().get_devices()
-    print(devices)
+    base_page =BasePage()
+    base_page.set_driver('192.168.31.153')
+    d = base_page.get_driver()
+    d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
+    # # cls.d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
+
 
 
 

@@ -10,7 +10,7 @@ class LoginPage(BasePage):
     def wait_page(self):
         try:
             if self.d(text='Login').wait(timeout=5):
-                pass
+                return True
             else:
                 raise Exception
         except Exception:
