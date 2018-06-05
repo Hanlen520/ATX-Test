@@ -11,7 +11,7 @@ from Public.ReadConfig import ReadConfig
 
 
 # from App.PageObject.WizardPage import skip_wizard_to_home
-
+from Public.Test_data import generate_test_data
 
 url = ReadConfig().get_host()
 
@@ -43,6 +43,7 @@ class Drivers:
     def run(self, cases):
         # get ATX-Server Online devices
         devices = ATX_Server(url).online_devices()
+        generate_test_data(devices)
 
         if not devices:
             print('There is no device online in ATX-Server')
@@ -63,3 +64,22 @@ class Drivers:
         pool.join()
         print('All runs done........ ')
 
+
+# def generate_test_data(devices):
+#     dict_tmp = {}
+#     for d in devices:
+#         print(devices.index(d))
+#         dict_tmp[d['serial']] = {}
+#         dict_tmp[d['serial']]['user_name'] = ReadConfig().get_testdata('user_name')[devices.index(d)]
+#         dict_tmp[d['serial']]['password'] = ReadConfig().get_testdata('password')[devices.index(d)]
+#         print(dict_tmp)
+#     print(os.path.abspath('.'))
+#     with open("./data.json", "w") as f:
+#         json.dump(dict_tmp, f)
+#         f.close()
+#     print("测试数据data.js创建完成")
+
+
+if __name__ == '__main__':
+    devices = ATX_Server(url).online_devices()
+    print(generate_test_data(devices))

@@ -9,6 +9,7 @@ from Public.BasePage import BasePage
 from Public.Decorator import *
 from PageObject import LoginPage
 from PageObject.HomePage import HomePage
+from Public.Test_data import get_test_data
 import unittest
 
 
@@ -24,6 +25,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         cls.d.set_fastinput_ime(True)
         # cls.driver.app_stop_all()
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
+        cls.test_data = get_test_data(cls.d)
 
 
     @classmethod
@@ -48,7 +50,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
     def test_01_login(self):
         '''登录'''
         LoginPage.LoginPage().wait_page()
-        LoginPage.login('1234', '5678')
+        LoginPage.login(self.test_data['user_name'], self.test_data['password'])
         time.sleep(2)
 
 

@@ -12,13 +12,16 @@ from Public.ReadConfig import ReadConfig
 apk_url = ReadConfig().get_apk_url()
 pkg_name = ReadConfig().get_pkg_name()
 
-
+@unittest.skip
 class apk_install(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
+        print(cls.d.info)
+        print(cls.d.device_info)
         cls.unlock_device()
         cls.d.make_toast('安装apk', 3)
+
         # cls.d.app_install(apk_url)
 
 
@@ -38,6 +41,7 @@ class apk_install(unittest.TestCase, BasePage):
 
     @testcase
     def test_install_apk(self):
+        # self.d.app_uninstall(pkg_name)
         self.d.app_install(apk_url)
         self.d.app_start(pkg_name)
         LoginPage.LoginPage().wait_page()

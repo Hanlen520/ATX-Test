@@ -11,9 +11,9 @@ class HomePage(BasePage):
             if self.d(text='HOME').wait(timeout=5):
                 pass
             else:
-                raise Exception
+                raise Exception('Not in HonePage')
         except Exception:
-            raise Exception
+            raise Exception('Not in HonePage')
 
     @teststep
     def home_click(self):

@@ -34,6 +34,11 @@ class ReadConfig:
         value = self.cf.get("APP", "pkg_name")
         return value
 
+    def get_testdata(self, name):
+        value = self.cf.get("TESTDATA", name)
+        return value.split('/')
+
+
 if __name__ == '__main__':
     print(ReadConfig().get_pkg_name())
-    print(ReadConfig().get_apk_url())
+    print(ReadConfig().get_testdata('user_name'))

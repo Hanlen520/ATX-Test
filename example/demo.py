@@ -14,6 +14,7 @@ from  Public.gt import GT
 from Public import devices
 from Public.BasePage import BasePage
 from Public.ReadConfig import ReadConfig
+from Public.Test_data import get_test_data
 
 
 # u2.DEBUG = True
@@ -41,10 +42,11 @@ def is_toast_exist(driver, toastmessage, timeout=30, poll_frequency=0.5):
 
 if __name__ == '__main__':
     base_page =BasePage()
-    base_page.set_driver('192.168.31.153')
+    base_page.set_driver('10.0.31.63')
     d = base_page.get_driver()
-    d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
-    # # cls.d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
+
+    print(d.device_info)
+    print(d.device_info['serial'])
 
 
 

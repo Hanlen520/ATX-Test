@@ -12,9 +12,9 @@ class LoginPage(BasePage):
             if self.d(text='Login').wait(timeout=5):
                 return True
             else:
-                raise Exception
+                raise Exception('Not in LoginPage')
         except Exception:
-            raise Exception
+            raise Exception('Not in LoginPage')
 
     @teststep
     def input_username(self, text):
