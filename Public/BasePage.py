@@ -16,10 +16,11 @@ class BasePage(object):
         # cls.driver = u2.connect()
         cls.d = u2.connect(dri)
 
+
     def get_driver(self):
         return self.d
 
-    @classmethod
+
     def unlock_device(self):
         '''unlock.apk install and launch'''
         pkgs = re.findall('package:([^\s]+)', self.d.shell(['pm', 'list', 'packages', '-3'])[0])
@@ -36,9 +37,9 @@ class BasePage(object):
     def back(self):
         '''点击返回'''
         self.d.press('back')
-
-    def set_chromedriver(self):
-        driver = ChromeDriver(self.d).driver()
+    @classmethod
+    def set_chromedriver(cls, device_ip=None, package=None, activity=None, process=None):
+        driver = ChromeDriver(cls.d).driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
         return driver
 
 

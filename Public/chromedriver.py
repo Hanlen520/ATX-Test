@@ -66,6 +66,7 @@ class ChromeDriver(object):
                 'androidActivity': activity or app['activity'],
             }
         }
+        print(capabilities)
 
         try:
             dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
@@ -91,10 +92,10 @@ class ChromeDriver(object):
 if __name__ == '__main__':
     import uiautomator2 as u2
 
-    # d = u2.connect()
-    # driver = ChromeDriver(d).driver()
-    # elem = driver.find_element_by_link_text(u"登录")
-    # elem.click()
-    # driver.quit()
-    # ChromeDriver(d).windows_kill()
+    d = u2.connect()
+    driver = ChromeDriver(d).driver()
+    elem = driver.find_element_by_link_text(u"登录")
+    elem.click()
+    driver.quit()
+    ChromeDriver(d).windows_kill()
     ChromeDriver.windows_kill()
