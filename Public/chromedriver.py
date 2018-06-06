@@ -11,6 +11,7 @@ import atexit
 import six
 from selenium import webdriver
 import psutil as pt
+import os
 
 if six.PY3:
     import subprocess
@@ -19,6 +20,7 @@ else:
     from urllib2 import URLError
     import subprocess32 as subprocess
 
+
 def getPidByName(Str):
     pids = pt.process_iter()
     pidList = []
@@ -26,6 +28,7 @@ def getPidByName(Str):
         if pid.name() == Str:
             pidList.append(pid.pid)
     return pidList
+
 
 class ChromeDriver(object):
     def __init__(self, d, port=9515):
@@ -74,19 +77,24 @@ class ChromeDriver(object):
         atexit.register(dr.quit)
         return dr
 
-    def windows_kill(self):
+    @staticmethod
+    def windows_kill():
         # subprocess.call(['taskkill', '/F', '/IM', 'chromedriver.exe', '/T'])
-        pid =os.popen('pgrep -l chromedriver')
-        print(pid)
-        # print(type(pid))
-        # subprocess.call(['kill', '-9', str(pid)])
+        pid = getPidByName('chromedriver')
+        for i in pid:
+            print(i)
+            # subprocess.call(['kill', '-9', int(i)])
+            os.popen('kill -9 %s' % i)
+
 
 
 if __name__ == '__main__':
     import uiautomator2 as u2
-    d = u2.connect()
-    driver = ChromeDriver(d).driver()
+
+    # d = u2.connect()
+    # driver = ChromeDriver(d).driver()
     # elem = driver.find_element_by_link_text(u"登录")
     # elem.click()
     # driver.quit()
-    ChromeDriver(d).windows_kill()
+    # ChromeDriver(d).windows_kill()
+    ChromeDriver.windows_kill()

@@ -12,7 +12,7 @@ from Public.ReadConfig import ReadConfig
 apk_url = ReadConfig().get_apk_url()
 pkg_name = ReadConfig().get_pkg_name()
 
-@unittest.skip
+
 class apk_install(unittest.TestCase, BasePage):
     @classmethod
     @setupclass

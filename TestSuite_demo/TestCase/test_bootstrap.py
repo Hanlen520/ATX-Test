@@ -12,7 +12,7 @@ from PageObject.HomePage import HomePage
 from Public.Test_data import get_test_data
 import unittest
 
-
+@unittest.skip
 class TestBootStrap(unittest.TestCase, BasePage):
     '''BootStrap demo测试'''
     @classmethod
@@ -24,6 +24,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         # cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.set_fastinput_ime(True)
         # cls.driver.app_stop_all()
+        cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
 
@@ -59,8 +60,9 @@ class TestBootStrap(unittest.TestCase, BasePage):
         '''弹窗操作'''
         self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
-        self.d(text='Alert').click()
-        self.d(text='yes').click()
+        self.d(text='Toast').click()
+        self.d(text='Show Dialog').click()
+        self.is_toast_exist('Toast')
         self.back()
         self.back()
         time.sleep(2)

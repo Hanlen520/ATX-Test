@@ -5,6 +5,8 @@ import uiautomator2 as u2
 from uiautomator2 import UiObjectNotFoundError
 import re
 
+from Public.chromedriver import ChromeDriver
+
 
 # u2.DEBUG = True
 
@@ -34,6 +36,15 @@ class BasePage(object):
     def back(self):
         '''点击返回'''
         self.d.press('back')
+
+    def set_chromedriver(self):
+        driver = ChromeDriver(self.d).driver()
+        return driver
+
+
+    def kill_chromedriver(self):
+        ChromeDriver.windows_kill()
+
 
     def _get_window_size(self):
         window = self.d.window_size()
