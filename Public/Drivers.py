@@ -74,14 +74,18 @@ class Drivers:
 
 def get_devices():
     devices_ip = ReadConfig().get_devices()
-    print(devices_ip)
+    print('Getting devices from config devices list %s' % devices_ip)
     devices_list = []
     for i in devices_ip:
         device = u2.connect(i)
-        if device.alive:
-            devices_list.append(device)
-        else:
-            print('The ip %s device is not alive' % i)
+        try:
+            if device.alive:
+                devices_list.append(device)
+            else:
+                print('The IP %s device is not alive,please checkout!' % i)
+        except Exception as e:
+            print('Raise ERR %s\nThe IP %s device is not alive,please checkout!' % (e, i))
+    print(devices_list)
     return devices_list
 
 
