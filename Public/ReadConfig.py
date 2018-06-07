@@ -14,11 +14,7 @@ class ReadConfig:
         self.cf = configparser.ConfigParser()
         self.cf.read(configPath, encoding='UTF-8')
 
-    def get_command(self):
-        value = self.cf.get("ATXSERVER", "handle")
-        return value
-
-    def get_host(self):
+    def get_url(self):
         value = self.cf.get("ATXSERVER", "host")
         return value
 

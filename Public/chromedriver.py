@@ -14,6 +14,7 @@ from selenium import webdriver
 import psutil as pt
 import os
 
+
 if six.PY3:
     import subprocess
     from urllib.error import URLError
@@ -21,8 +22,6 @@ else:
     from urllib2 import URLError
     import subprocess32 as subprocess
 
-from Public.Log import Log
-log = Log()
 
 def getPidByName(Str):
     pids = pt.process_iter()
@@ -86,12 +85,12 @@ class ChromeDriver(object):
         # subprocess.call(['taskkill', '/F', '/IM', 'chromedriver.exe', '/T'])
         pid = getPidByName('chromedriver')
         for i in pid:
-            # for mac
-            os.popen('kill -9 %d' % i)
-            # # for windows
-            # os.popen('taskkill /PID %d /F' % i)
-        print('All chromedriver pid killed')
+            # # for mac
+            # os.popen('kill -9 %d' % i)
 
+            # for windows
+            os.popen('taskkill /PID %d /F' % i)
+        print('All chromedriver pid killed')
 
 
 if __name__ == '__main__':

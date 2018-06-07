@@ -3,7 +3,7 @@ import time
 from functools import wraps
 
 from macaca import WebDriverException
-
+from uiautomator2 import UiObjectNotFoundError
 from Public.BasePage import BasePage
 from Public.ReportPath import ReportPath
 from Public.Log import Log
