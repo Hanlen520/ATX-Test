@@ -10,8 +10,7 @@ import re
 
 import uiautomator2 as u2
 import uiautomator2.ext.htmlreport as htmlreport
-from  Public.gt import GT
-from Public import devices
+
 from Public.BasePage import BasePage
 from Public.ReadConfig import ReadConfig
 from Public.Test_data import get_test_data
@@ -41,15 +40,55 @@ def is_toast_exist(driver, text, timeout=30, poll_frequency=0.5):
         print('Cannot find toast \n %s' % e)
         return False
 
+def getActivity(d):
+    # packageName=subprocess.check_output('adb shell dumpsys activity top | grep ACTIVITY', shell=True).decode()
+
+    packageName=d.shell('adb shell dumpsys activity top | grep ACTIVITY')[0]
+    packageName_list = packageName.split('ACTIVITY')
+    packageName = packageName_list[-1]
+    packageName = packageName.strip()
+    packageName=' '.join(packageName.split(' ')[:1])
+    return packageName
 
 if __name__ == '__main__':
     base_page = BasePage()
-    base_page.set_driver('10.0.31.63')
+    # base_page.set_driver('10.0.31.63') # nexus5
+    base_page.set_driver('10.0.30.162') # s8
+    #
     d = base_page.get_driver()
+    # print(d.current_app())
+    # print(d.info)
+    d.set_fastinput_ime(True)
+    # d(resourceId="com.yupaopao.yuer:id/l5").set_text("123456")
+    d(description=u'搜索').click()
+    ele = d(resourceId="com.sec.android.inputmethod:id/keyboardView")
 
-    d(text='Show Dialog').click()
-    time.sleep(0.3)
-    base_page.is_toast_exist("Hello")
+    # ele =d(resourceId="com.sec.android.inputmethod:id/keyboardView").info['bounds']
+    # print(keyboard)
+    # def get_key_secrch(ele):
+    #     x=ele['left']+3*(ele['right']-ele['left'])/8
+    #     y=ele['top']+7*(ele['bottom']-ele['top'])/8
+    #     print(x,y)
+    #
+    #
+    # get_key_secrch(ele)
+    #
+    # x = ele['left'] + 3 * (ele['right'] - ele['left']) / 8
+    # y = ele['top'] + 7 * (ele['bottom'] - ele['top']) /
+    # d.click(x,y)
+
+
+    # packageName = d.shell('dumpsys activity top | grep ACTIVITY')[0]
+    # packageName1 = d.shell('dumpsys window windows | grep Focused')[0]
+    # print(packageName1)
+    # # packageName_list = packageName.split('ACTIVITY')
+    # print(packageName_list)
+    # packageName = packageName_list[-1]
+    # print(packageName)
+    # packageName = packageName.strip()
+    # print(packageName)
+    # packageName = ' '.join(packageName.split(' ')[:1])
+    # print(packageName)
 
 
 

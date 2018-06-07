@@ -31,5 +31,6 @@ class RunCases:
             runner = HTMLTestRunner(stream=file, title=self.device['model']+'自动化测试报告', description='用例执行情况：')
             runner.run(cases)
             file.close()
+
             # shutil.copyfile(self.file_name, './TestReport/TestReport.html')
 

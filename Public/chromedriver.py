@@ -5,6 +5,7 @@
 # Experimental, maybe change in the future
 # Created by <hzsunshx> 2017-01-20
 
+
 from __future__ import absolute_import
 
 import atexit
@@ -20,18 +21,20 @@ else:
     from urllib2 import URLError
     import subprocess32 as subprocess
 
+from Public.Log import Log
+log = Log()
 
 def getPidByName(Str):
     pids = pt.process_iter()
     pidList = []
     for pid in pids:
         if pid.name() == Str:
-            pidList.append(pid.pid)
+            pidList.append(int(pid.pid))
     return pidList
 
 
 class ChromeDriver(object):
-    def __init__(self, d, port=9515):
+    def __init__(self, d, port):
         self._d = d
         self._port = port
 
@@ -57,6 +60,7 @@ class ChromeDriver(object):
             selenium driver
         """
         app = self._d.current_app()
+        # print(self._d.get_driver().device_info['serial'])
         capabilities = {
             'chromeOptions': {
                 'androidDeviceSerial': device_ip or self._d.serial,
@@ -66,7 +70,6 @@ class ChromeDriver(object):
                 'androidActivity': activity or app['activity'],
             }
         }
-        print(capabilities)
 
         try:
             dr = webdriver.Remote('http://localhost:%d' % self._port, capabilities)
@@ -79,23 +82,25 @@ class ChromeDriver(object):
         return dr
 
     @staticmethod
-    def windows_kill():
+    def kill():
         # subprocess.call(['taskkill', '/F', '/IM', 'chromedriver.exe', '/T'])
         pid = getPidByName('chromedriver')
         for i in pid:
-            print(i)
-            # subprocess.call(['kill', '-9', int(i)])
-            os.popen('kill -9 %s' % i)
+            # for mac
+            os.popen('kill -9 %d' % i)
+            # # for windows
+            # os.popen('taskkill /PID %d /F' % i)
+        print('All chromedriver pid killed')
 
 
 
 if __name__ == '__main__':
     import uiautomator2 as u2
 
-    d = u2.connect()
-    driver = ChromeDriver(d).driver()
-    elem = driver.find_element_by_link_text(u"登录")
-    elem.click()
-    driver.quit()
-    ChromeDriver(d).windows_kill()
-    ChromeDriver.windows_kill()
+    # d = u2.connect()
+    # driver = ChromeDriver(d).driver()
+    # elem = driver.find_element_by_link_text(u"登录")
+    # elem.click()
+    # driver.quit()
+    # ChromeDriver(d).windows_kill()
+    ChromeDriver.kill()

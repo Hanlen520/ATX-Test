@@ -8,6 +8,7 @@ from Public.ReportPath import ReportPath
 from Public.BasePage import BasePage
 from Public.Log import Log
 from Public.ReadConfig import ReadConfig
+from Public.chromedriver import ChromeDriver
 
 
 # from App.PageObject.WizardPage import skip_wizard_to_home
@@ -43,6 +44,7 @@ class Drivers:
     def run(self, cases):
         # get ATX-Server Online devices
         devices = ATX_Server(url).online_devices()
+        print('Has %s online devices in ATX-Server' % len(devices))
         generate_test_data(devices)
 
         if not devices:
@@ -63,21 +65,9 @@ class Drivers:
         pool.close()
         pool.join()
         print('All runs done........ ')
+        ChromeDriver.kill()
 
 
-# def generate_test_data(devices):
-#     dict_tmp = {}
-#     for d in devices:
-#         print(devices.index(d))
-#         dict_tmp[d['serial']] = {}
-#         dict_tmp[d['serial']]['user_name'] = ReadConfig().get_testdata('user_name')[devices.index(d)]
-#         dict_tmp[d['serial']]['password'] = ReadConfig().get_testdata('password')[devices.index(d)]
-#         print(dict_tmp)
-#     print(os.path.abspath('.'))
-#     with open("./data.json", "w") as f:
-#         json.dump(dict_tmp, f)
-#         f.close()
-#     print("测试数据data.js创建完成")
 
 
 if __name__ == '__main__':

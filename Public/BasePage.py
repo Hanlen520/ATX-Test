@@ -4,8 +4,10 @@ import time
 import uiautomator2 as u2
 from uiautomator2 import UiObjectNotFoundError
 import re
+import warnings
 
 from Public.chromedriver import ChromeDriver
+from Public.Ports import Ports
 
 
 # u2.DEBUG = True
@@ -16,36 +18,58 @@ class BasePage(object):
         # cls.driver = u2.connect()
         cls.d = u2.connect(dri)
 
-
     def get_driver(self):
         return self.d
 
-
-    def unlock_device(self):
+    # def current_app(self):
+    #     """
+    #     Return: dict(package, activity, pid?)
+    #     """
+    #     # try: adb shell dumpsys activity top
+    #     _activityRE = re.compile(
+    #         r'(?P<package>[^/]+)/(?P<activity>[^/\s]+) \w+ pid=(?P<pid>\d+)'
+    #     )
+    #     # m1=self.shell('dumpsys activity top | grep ACTIVITY')[0].split('ACTIVITY')[-1].strip()
+    #     m = _activityRE.search(self.d.shell('dumpsys activity top | grep ACTIVITY')[0].split('ACTIVITY')[-1].strip())
+    #     if m:
+    #         return dict(
+    #             package=m.group('package'),
+    #             activity=m.group('activity'),
+    #             pid=int(m.group('pid')))
+    #
+    #     # try: adb shell dumpsys window windows
+    #     _focusedRE = re.compile(
+    #         'mFocusedApp=.*ActivityRecord{\w+ \w+ (?P<package>.*)/(?P<activity>.*) .*'
+    #     )
+    #     m = _focusedRE.search(self.d.shell('dumpsys window windows | grep Focused')[0])
+    #     if m:
+    #         return dict(
+    #             package=m.group('package'), activity=m.group('activity'))
+    #     # empty result
+    #     warnings.warn("Couldn't get focused app", stacklevel=2)
+    #     return dict(package=None, activity=None)
+    @classmethod
+    def unlock_device(cls):
         '''unlock.apk install and launch'''
-        pkgs = re.findall('package:([^\s]+)', self.d.shell(['pm', 'list', 'packages', '-3'])[0])
+        pkgs = re.findall('package:([^\s]+)', cls.d.shell(['pm', 'list', 'packages', '-3'])[0])
         if 'io.appium.unlock' in pkgs:
-            self.d.app_start('io.appium.unlock')
-            self.d.shell('input keyevent 3')
+            cls.d.app_start('io.appium.unlock')
+            cls.d.shell('input keyevent 3')
         else:
             #  appium unlock.apk 下载安装
             print('installing io.appium.unlock')
-            self.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
-            self.d.app_start('io.appium.unlock')
-            self.d.shell('input keyevent 3')
+            cls.d.app_install('https://raw.githubusercontent.com/pengchenglin/ATX-Test/master/apk/unlock.apk')
+            cls.d.app_start('io.appium.unlock')
+            cls.d.shell('input keyevent 3')
 
     def back(self):
         '''点击返回'''
         self.d.press('back')
-    @classmethod
-    def set_chromedriver(cls, device_ip=None, package=None, activity=None, process=None):
-        driver = ChromeDriver(cls.d).driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
+
+    def set_chromedriver(self, device_ip=None, package=None, activity=None, process=None):
+        driver = ChromeDriver(self.d, Ports().get_ports(1)[0]).\
+            driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
         return driver
-
-
-    def kill_chromedriver(self):
-        ChromeDriver.windows_kill()
-
 
     def _get_window_size(self):
         window = self.d.window_size()
@@ -67,7 +91,6 @@ class BasePage(object):
 
         return x_left, y_up, x_center, y_center, x_right, y_down
 
-    @classmethod
     def _swipe(self, fromX, fromY, toX, toY, steps):
         self.d.swipe(fromX, fromY, toX, toY, steps)
 

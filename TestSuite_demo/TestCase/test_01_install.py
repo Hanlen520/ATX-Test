@@ -17,8 +17,7 @@ class apk_install(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
-        print(cls.d.info)
-        print(cls.d.device_info)
+
         cls.unlock_device()
         cls.d.make_toast('安装apk', 3)
 

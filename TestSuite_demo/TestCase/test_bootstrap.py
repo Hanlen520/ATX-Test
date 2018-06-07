@@ -12,18 +12,13 @@ from PageObject.HomePage import HomePage
 from Public.Test_data import get_test_data
 import unittest
 
-@unittest.skip
+
 class TestBootStrap(unittest.TestCase, BasePage):
     '''BootStrap demo测试'''
     @classmethod
     @setupclass
     def setUpClass(cls):
-        # cls.unlock_device()
-        # cls.d.app_install('https://npmcdn.com/android-app-bootstrap@latest/android_app_bootstrap/build/outputs/apk/android_app_bootstrap-debug.apk')
-        # cls.d.make_toast("开始测试", 3)
-        # cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.set_fastinput_ime(True)
-        # cls.driver.app_stop_all()
         cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
@@ -52,7 +47,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         '''登录'''
         LoginPage.LoginPage().wait_page()
         LoginPage.login(self.test_data['user_name'], self.test_data['password'])
-        time.sleep(2)
+
 
 
     @testcase
@@ -62,13 +57,28 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
         self.d(text='Toast').click()
         self.d(text='Show Dialog').click()
-        self.is_toast_exist('Toast')
+        # self.is_toast_exist('Toast')
         self.back()
         self.back()
-        time.sleep(2)
+
+
 
     @testcase
-    def test_03_ZZZZZ(self):
+    def test_03webview(self):
+        '''webview测试 '''
+        self.d(text='Baidu').click()
+        time.sleep(3)
+        driver = self.set_chromedriver()
+        driver.find_element_by_id('index-kw').click()
+        driver.find_element_by_id('index-kw').send_keys('Python')
+        time.sleep(3)
+        driver.find_element_by_id('index-bn').click()
+        time.sleep(3)
+        driver.quit()
+
+
+    @testcase
+    def test_04_ZZZZZ(self):
         '''主页操作并退出'''
         HomePage().home_click()
         HomePage().baidu_click()
@@ -79,8 +89,9 @@ class TestBootStrap(unittest.TestCase, BasePage):
         HomePage().wait_page()
         time.sleep(3)
 
+
     @testcase
-    def test_04_login_again(self):
+    def test_05_login_again(self):
         '''再次登录'''
         LoginPage.LoginPage().login_click()
 

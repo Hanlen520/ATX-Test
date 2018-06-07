@@ -8,27 +8,28 @@ from Public.BasePage import BasePage
 import re
 import warnings
 
-# u=u2.connect('192.168.31.231')
+
 base_page = BasePage()
 # base_page.set_driver('10.0.31.63')
-base_page.set_driver('192.168.31.153')
+base_page.set_driver('10.0.30.162')
 d = base_page.get_driver()
 d.app_stop('com.github.android_app_bootstrap')
 d.app_start('com.github.android_app_bootstrap')
 d(text='Login').click()
+time.sleep(2)
 d(text='Baidu').click()
 time.sleep(3)
-# print(u.serial)
-# print(u.current_app())
-driver = base_page.set_chromedriver(activity="com.github.android_app_bootstrap.activity.WelcomeActivity",
-                                    package='com.github.android_app_bootstrap', process='com.github.android_app_bootstrap')
+
+driver = base_page.set_chromedriver()
+# driver = base_page.set_chromedriver(activity="com.github.android_app_bootstrap.activity.WelcomeActivity",
+#                                     package='com.github.android_app_bootstrap', process='com.github.android_app_bootstrap')
 driver.find_element_by_id('index-kw').click()
 driver.find_element_by_id('index-kw').send_keys('Python')
 time.sleep(3)
 driver.find_element_by_id('index-bn').click()
 driver.quit()
 
-ChromeDriver(d).windows_kill()
+# ChromeDriver(d).windows_kill()
 
 
 # def current_app(d):
