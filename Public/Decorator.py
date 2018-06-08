@@ -1,13 +1,9 @@
 import time
 
 from functools import wraps
-
-from macaca import WebDriverException
-from uiautomator2 import UiObjectNotFoundError
 from Public.BasePage import BasePage
 from Public.ReportPath import ReportPath
 from Public.Log import Log
-
 
 flag = 'IMAGE:'
 log = Log()
@@ -31,14 +27,6 @@ def teststep(func):
             log.i('\t--> %s', func.__qualname__)
             ret = func(*args, **kwargs)
             return ret
-        except WebDriverException as e:
-            log.e('WebDriverException, %s', e)
-            log.e('\t<-- %s, %s, %s', func.__qualname__, 'WebDriverException', 'Error')
-
-            if flag in str(e):
-                raise WebDriverException(message=e)
-            else:
-                raise WebDriverException(message=flag + _screenshot(func.__qualname__))
         except AssertionError as e:
             log.e('AssertionError, %s', e)
             log.e('\t<-- %s, %s, %s', func.__qualname__, 'AssertionError', 'Error')
@@ -67,14 +55,6 @@ def teststeps(func):
             ret = func(*args, **kwargs)
             log.i('  <-- %s, %s', func.__qualname__, 'Success')
             return ret
-        except WebDriverException as e:
-            log.e('WebDriverException, %s', e)
-            log.e('  <-- %s, %s, %s', func.__qualname__, 'WebDriverException', 'Error')
-
-            if flag in str(e):
-                raise WebDriverException(message=e)
-            else:
-                raise WebDriverException(message=flag + _screenshot(func.__qualname__))
         except AssertionError as e:
             log.e('AssertionError, %s', e)
             log.e('  <-- %s, %s, %s', func.__qualname__, 'AssertionError', 'Error')
@@ -103,14 +83,6 @@ def _wrapper(func):
             ret = func(*args, **kwargs)
             log.i('<-- %s, %s\n', func.__qualname__, 'Success')
             return ret
-        except WebDriverException as e:
-            log.e('WebDriverException, %s', e)
-            log.e('<-- %s, %s, %s\n', func.__qualname__, 'WebDriverException', 'Error')
-
-            if flag in str(e):
-                raise WebDriverException(message=e)
-            else:
-                raise WebDriverException(message=flag + _screenshot(func.__qualname__))
         except AssertionError as e:
             log.e('AssertionError, %s', e)
             log.e('<-- %s, %s, %s\n', func.__qualname__, 'AssertionError', 'Fail')

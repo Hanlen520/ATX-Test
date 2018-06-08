@@ -12,9 +12,6 @@ from Public.chromedriver import ChromeDriver
 from Public.Test_data import generate_test_data
 
 
-# from App.PageObject.WizardPage import skip_wizard_to_home
-
-
 class Drivers:
     @staticmethod
     def _run_cases(run, cases):
@@ -31,10 +28,6 @@ class Drivers:
         base_page.set_driver(run.get_device()['ip'])
 
         try:
-            # skip wizard
-            # if not into home page will raise AssertionError
-            # skip_wizard_to_home()
-
             # run cases
             run.run(cases)
         except AssertionError as e:
@@ -43,10 +36,11 @@ class Drivers:
     def run(self, cases):
         # # get ATX-Server Online devices
         # devices = ATX_Server(ReadConfig().get_url()).online_devices()
-        # print('Has %s online devices in ATX-Server' % len(devices))
+        # print('\nThere has %s online devices in ATX-Server' % len(devices))
 
         # get  devices from config devices list
         devices = get_devices()
+        print('\nThere has %s  devices alive in config list' % len(devices))
 
         # generate test data for every devices
         generate_test_data(devices)
@@ -55,6 +49,7 @@ class Drivers:
             print('There is no device found')
             return
 
+        print('Starting Run test >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         runs = []
         for i in range(len(devices)):
             runs.append(RunCases(devices[i]))
@@ -64,7 +59,6 @@ class Drivers:
         for run in runs:
             pool.apply_async(self._run_cases,
                              args=(run, cases,))
-            # time.sleep(4)
         print('Waiting for all runs done........ ')
         pool.close()
         pool.join()
@@ -80,15 +74,18 @@ def get_devices():
         device = u2.connect(i)
         try:
             if device.alive:
-                devices_list.append(device)
+                dict_tmp = device.device_info
+                dict_tmp['ip'] = i
+                devices_list.append(dict_tmp)
             else:
                 print('The IP %s device is not alive,please checkout!' % i)
         except Exception as e:
             print('Raise ERR %s\nThe IP %s device is not alive,please checkout!' % (e, i))
-    print(devices_list)
     return devices_list
 
 
-if __name__ == '__main__':
-    devices = ATX_Server(ReadConfig().get_url()).online_devices()
-    print(generate_test_data(devices))
+# if __name__ == '__main__':
+#
+#     print(ATX_Server(ReadConfig().get_url()).online_devices())
+#
+#     print(get_devices())

@@ -21,13 +21,11 @@ class apk_install(unittest.TestCase, BasePage):
         cls.unlock_device()
         cls.d.make_toast('安装apk', 3)
 
-        # cls.d.app_install(apk_url)
-
 
     @classmethod
     @teardownclass
     def tearDownClass(cls):
-        cls.d.make_toast("测试结束", 3)
+        cls.d.make_toast("安装成功", 3)
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
 
     @setup
@@ -40,7 +38,7 @@ class apk_install(unittest.TestCase, BasePage):
 
     @testcase
     def test_install_apk(self):
-        # self.d.app_uninstall(pkg_name)
         self.d.app_install(apk_url)
         self.d.app_start(pkg_name)
+        time.sleep(3)
         LoginPage.LoginPage().wait_page()

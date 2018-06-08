@@ -9,7 +9,7 @@ class LoginPage(BasePage):
     @teststep
     def wait_page(self):
         try:
-            if self.d(text='Login').wait(timeout=5):
+            if self.d(text='Login').wait(timeout=15):
                 return True
             else:
                 raise Exception('Not in LoginPage')

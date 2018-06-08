@@ -8,7 +8,7 @@ class HomePage(BasePage):
     @teststep
     def wait_page(self):
         try:
-            if self.d(text='HOME').wait(timeout=5):
+            if self.d(text='HOME').wait(timeout=15):
                 pass
             else:
                 raise Exception('Not in HonePage')

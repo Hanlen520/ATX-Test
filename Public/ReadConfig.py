@@ -35,6 +35,6 @@ class ReadConfig:
         return value.split('/')
 
 
-if __name__ == '__main__':
-    print(ReadConfig().get_pkg_name())
-    print(ReadConfig().get_testdata('user_name'))
+# if __name__ == '__main__':
+#     print(ReadConfig().get_pkg_name())
+#     print(ReadConfig().get_testdata('user_name'))

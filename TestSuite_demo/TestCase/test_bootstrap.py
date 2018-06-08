@@ -7,8 +7,8 @@ import uiautomator2 as u2
 import time
 from Public.BasePage import BasePage
 from Public.Decorator import *
-from PageObject import LoginPage
 from PageObject.HomePage import HomePage
+from PageObject import LoginPage
 from Public.Test_data import get_test_data
 import unittest
 
@@ -30,12 +30,10 @@ class TestBootStrap(unittest.TestCase, BasePage):
         # pass
         cls.d.make_toast("测试结束", 3)
         cls.d.set_fastinput_ime(False)
-        # cls.driver.service("uiautomator").stop()  # 停止uiautomator守护程序，允许其他测试框架如 appium 运行
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
 
     @setup
     def setUp(self):
-        # time.sleep(3)  # 等待首页广告结束
         pass
 
     @teardown
@@ -57,7 +55,6 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
         self.d(text='Toast').click()
         self.d(text='Show Dialog').click()
-        # self.is_toast_exist('Toast')
         self.back()
         self.back()
 
@@ -86,7 +83,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         HomePage().personal_click()
         HomePage().personal_logout_click()
 
-        HomePage().wait_page()
+        LoginPage.LoginPage().wait_page()
         time.sleep(3)
 
 
@@ -97,6 +94,3 @@ class TestBootStrap(unittest.TestCase, BasePage):
 
         
 
-#
-# if __name__ == '__main__':
-#     unittest.main()

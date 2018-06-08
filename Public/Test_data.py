@@ -5,7 +5,6 @@ import json
 from Public.ReadConfig import ReadConfig
 
 proDir = os.path.split(os.path.realpath(__file__))[0]
-#将path分割成路径名和文件名
 data_path = os.path.join(proDir, "data.json")
 
 
@@ -19,7 +18,7 @@ def generate_test_data(devices):
     with open(data_path, "w") as f:
         json.dump(dict_tmp, f)
         f.close()
-    print("测试数据data.js创建完成")
+    print("Test data data.js generated success")
 
 
 def get_test_data(d):

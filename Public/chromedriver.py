@@ -59,7 +59,6 @@ class ChromeDriver(object):
             selenium driver
         """
         app = self._d.current_app()
-        # print(self._d.get_driver().device_info['serial'])
         capabilities = {
             'chromeOptions': {
                 'androidDeviceSerial': device_ip or self._d.serial,
@@ -82,8 +81,6 @@ class ChromeDriver(object):
 
     @staticmethod
     def kill():
-        # subprocess.call(['taskkill', '/F', '/IM', 'chromedriver.exe', '/T'])
-        #
         # # for windows
         # pid = getPidByName('chromedriver.exe')
         # for i in pid:
@@ -105,5 +102,4 @@ if __name__ == '__main__':
     # elem = driver.find_element_by_link_text(u"登录")
     # elem.click()
     # driver.quit()
-    # ChromeDriver(d).windows_kill()
     ChromeDriver.kill()
