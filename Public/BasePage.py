@@ -70,6 +70,19 @@ class BasePage(object):
             driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
         return driver
 
+    @staticmethod
+    def find_message(elements, text):
+        count = elements.count
+        while count > 0:
+            count = count - 1
+            message = elements[count].info['text']
+            if text in message:
+                return True
+            elif count == 0:
+                return False
+        else:
+            return False
+
     def _get_window_size(self):
         window = self.d.window_size()
         x = window[0]

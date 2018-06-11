@@ -31,6 +31,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         cls.d.make_toast("测试结束", 3)
         cls.d.set_fastinput_ime(False)
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
+        cls.d.open_identify()
 
     @setup
     def setUp(self):
@@ -57,6 +58,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.d(text='Show Dialog').click()
         self.back()
         self.back()
+
 
 
 
