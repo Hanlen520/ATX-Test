@@ -38,8 +38,24 @@ class apk_install(unittest.TestCase, BasePage):
 
     @testcase
     def test_install_apk(self):
+        '''打开app'''
         # self.d.app_install(apk_url)
         self.d.app_start(pkg_name)
         time.sleep(3)
         LoginPage.LoginPage().wait_page()
         raise Exception('手动报错')
+
+    @testcase
+    def test_okok(self):
+        '''okok
+        jsjkdj'''
+        a=1
+        b=2
+        self.assertEqual(a,b)
+
+    @testcase
+    def test_opppp(self):
+        '''ooooooooo
+        好的按时付款杰拉德看风景
+        爱是看得见'''
+        self.assertEqual(oooo)

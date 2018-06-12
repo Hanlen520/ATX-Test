@@ -879,12 +879,12 @@ class _TestResult(TestResult):
         use_time = round(self.test_end_time - self.test_start_time, 2)
         self.result.append((0, test, output, '', use_time))
         if self.verbosity > 1:
-            sys.stderr.write('  S  ')
+            sys.stderr.write('Success  ')
             sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            sys.stderr.write('\n\n')
         else:
-            sys.stderr.write('  S  ')
-            sys.stderr.write('\n')
+            sys.stderr.write('Success  ')
+            sys.stderr.write('\n\n')
 
     def addError(self, test, err):
         self.error_count += 1
@@ -894,12 +894,12 @@ class _TestResult(TestResult):
         use_time = round(self.test_end_time - self.test_start_time, 2)
         self.result.append((2, test, output, _exc_str, use_time))
         if self.verbosity > 1:
-            sys.stderr.write('  E  ')
+            sys.stderr.write('Error  ')
             sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            sys.stderr.write('\n\n')
         else:
-            sys.stderr.write('  E  ')
-            sys.stderr.write('\n')
+            sys.stderr.write('Error  ')
+            sys.stderr.write('\n\n')
 
         # 添加收集错误用例名字 -- Gelomen
         self.errorCase += "<li>" + str(test) + "</li>"
@@ -912,12 +912,12 @@ class _TestResult(TestResult):
         use_time = round(self.test_end_time - self.test_start_time, 2)
         self.result.append((1, test, output, _exc_str, use_time))
         if self.verbosity > 1:
-            sys.stderr.write('  F  ')
+            sys.stderr.write('Fail  ')
             sys.stderr.write(str(test))
-            sys.stderr.write('\n')
+            sys.stderr.write('\n\n')
         else:
-            sys.stderr.write('  F  ')
-            sys.stderr.write('\n')
+            sys.stderr.write('Fail  ')
+            sys.stderr.write('\n\n')
 
         # 添加收集失败用例名字 -- Gelomen
         self.failCase += "<li>" + str(test) + "</li>"
