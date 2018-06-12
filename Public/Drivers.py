@@ -34,13 +34,17 @@ class Drivers:
             log.e('AssertionError, %s', e)
 
     def run(self, cases):
-        # # get ATX-Server Online devices
-        # devices = ATX_Server(ReadConfig().get_url()).online_devices()
-        # print('\nThere has %s online devices in ATX-Server' % len(devices))
-
-        # get  devices from config devices list
-        devices = get_devices()
-        print('\nThere has %s  devices alive in config list' % len(devices))
+        method = ReadConfig().get_atx_server('method').strip()
+        if method == 'host':
+            # get ATX-Server Online devices
+            devices = ATX_Server(ReadConfig().get_url()).online_devices()
+            print('\nThere has %s online devices in ATX-Server' % len(devices))
+        elif method == 'devices':
+            # get  devices from config devices list
+            devices = get_devices()
+            print('\nThere has %s  devices alive in config list' % len(devices))
+        else:
+            raise Exception('Config.ini method illegal:method =%s' % method)
 
         # generate test data for every devices
         generate_test_data(devices)
@@ -84,8 +88,10 @@ def get_devices():
     return devices_list
 
 
-# if __name__ == '__main__':
-#
-#     print(ATX_Server(ReadConfig().get_url()).online_devices())
-#
-#     print(get_devices())
+if __name__ == '__main__':
+
+    print(ATX_Server(ReadConfig().get_url()).online_devices())
+
+    print(get_devices())
+    print(ReadConfig().get_atx_server('method'))
+

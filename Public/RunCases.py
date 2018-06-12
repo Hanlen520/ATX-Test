@@ -2,7 +2,7 @@ import os
 import time
 import shutil
 
-from Public.HTMLTestReportCN import HTMLTestRunner
+from Public.HTMLTestReport_CN import HTMLTestRunner
 
 
 class RunCases:

@@ -93,7 +93,7 @@ class BasePage(object):
     def _get_element_size(element):
         # rect = element.info['visibleBounds']
         rect = element.info['bounds']
-        print(rect)
+        # print(rect)
         x_center = (rect['left'] + rect['right']) / 2
         y_center = (rect['bottom'] + rect['top']) / 2
         x_left = rect['left']
@@ -124,7 +124,7 @@ class BasePage(object):
             fromX = 0.5 * x
             fromY = 0.5 * y
             toX = 0.5 * x
-            toY = 0.2 * y
+            toY = 0.25 * y
 
         self._swipe(fromX, fromY, toX, toY, steps)
 
@@ -147,7 +147,7 @@ class BasePage(object):
             fromX = 0.5 * x
             fromY = 0.5 * y
             toX = 0.5 * x
-            toY = 0.8 * y
+            toY = 0.75 * y
 
         self._swipe(fromX, fromY, toX, toY, steps)
 
@@ -168,7 +168,7 @@ class BasePage(object):
             x, y = self._get_window_size()
             fromX = 0.5 * x
             fromY = 0.5 * y
-            toX = 0.2 * x
+            toX = 0.25 * x
             toY = 0.5 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
@@ -189,11 +189,11 @@ class BasePage(object):
             x, y = self._get_window_size()
             fromX = 0.5 * x
             fromY = 0.5 * y
-            toX = 0.8 * x
+            toX = 0.75 * x
             toY = 0.5 * y
         self._swipe(fromX, fromY, toX, toY, steps)
 
-    def _find_element_by_swipe(self, direction, value, element=None, steps=0.5, max_swipe=6):
+    def _find_element_by_swipe(self, direction, value, element=None, steps=0.2, max_swipe=6):
         """
         :param direction: swip direction exp: right left up down
         :param value: The value of the UI element location strategy. exp: d(text='Logina')

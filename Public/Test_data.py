@@ -18,7 +18,7 @@ def generate_test_data(devices):
     with open(data_path, "w") as f:
         json.dump(dict_tmp, f)
         f.close()
-    print("Test data data.js generated success")
+    print("Test data data.json generated success")
 
 
 def get_test_data(d):
