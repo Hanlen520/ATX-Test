@@ -88,10 +88,10 @@ def get_devices():
     return devices_list
 
 
-if __name__ == '__main__':
-
-    print(ATX_Server(ReadConfig().get_url()).online_devices())
-
-    print(get_devices())
-    print(ReadConfig().get_atx_server('method'))
+# if __name__ == '__main__':
+#
+#     print(ATX_Server(ReadConfig().get_url()).online_devices())
+#
+#     print(get_devices())
+#     print(ReadConfig().get_atx_server('method'))
 

@@ -65,13 +65,33 @@ class BasePage(object):
         '''点击返回'''
         self.d.press('back')
 
+
     def set_chromedriver(self, device_ip=None, package=None, activity=None, process=None):
         driver = ChromeDriver(self.d, Ports().get_ports(1)[0]).\
             driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
         return driver
+    @classmethod
+    def initialize_device(cls):
+        '''初始化设备
+        设置fastinput_ime和弹窗自动点击'''
+        cls.unlock_device()
+        cls.d.set_fastinput_ime(True)
+        cls.d.watchers.watched = False
+        cls.d.watcher("ALERT").when(text="允许").click(text="允许")
+        cls.d.watchers.watched = True
+
+    @classmethod
+    def restitute_device(cls):
+        '''还原设备'''
+        cls.d.set_fastinput_ime(False)
+        cls.d.watchers.watched = False
+
+
+
 
     @staticmethod
     def find_message(elements, text):
+        '''查找元素列表中是否存在 text'''
         count = elements.count
         while count > 0:
             count = count - 1

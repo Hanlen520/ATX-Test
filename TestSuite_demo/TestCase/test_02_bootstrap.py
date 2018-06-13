@@ -18,7 +18,6 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
-        cls.d.set_fastinput_ime(True)
         cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
@@ -29,9 +28,8 @@ class TestBootStrap(unittest.TestCase, BasePage):
     def tearDownClass(cls):
         # pass
         cls.d.make_toast("测试结束", 3)
-        cls.d.set_fastinput_ime(False)
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
-        cls.d.open_identify()
+
 
     @setup
     def setUp(self):
