@@ -62,7 +62,8 @@ class BasePage(object):
             cls.d.shell('input keyevent 3')
 
     def back(self):
-        '''点击返回'''
+        '''点击返回,wacthed需要三秒 返回增加4秒等待'''
+        time.sleep(4)
         self.d.press('back')
 
 
@@ -71,21 +72,25 @@ class BasePage(object):
             driver(device_ip=device_ip, package=package, attach=True, activity=activity, process=process)
         return driver
     @classmethod
-    def initialize_device(cls):
-        '''初始化设备
-        设置fastinput_ime和弹窗自动点击'''
-        cls.unlock_device()
-        cls.d.set_fastinput_ime(True)
+    def watch_device(cls):
+        '''wacther devices 如果存在元素则自动点击'''
         cls.d.watchers.watched = False
-        cls.d.watcher("ALERT").when(text="允许").click(text="允许")
+        cls.d.watcher("ALERT").when(text="yes").click(text="yes")
+        cls.d.watcher("允许").when(text="允许").click(text="允许")
         cls.d.watchers.watched = True
 
     @classmethod
-    def restitute_device(cls):
-        '''还原设备'''
-        cls.d.set_fastinput_ime(False)
+    def unwatch_device(cls):
+        '''关闭watcher '''
         cls.d.watchers.watched = False
 
+    @classmethod
+    def set_fastinput_ime(cls):
+        cls.d.set_fastinput_ime(True)
+
+    @classmethod
+    def set_original_ime(cls):
+        cls.d.set_fastinput_ime(False)
 
 
 

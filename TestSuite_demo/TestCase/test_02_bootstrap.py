@@ -18,7 +18,6 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @classmethod
     @setupclass
     def setUpClass(cls):
-        cls.d.app_stop("com.github.android_app_bootstrap")
         cls.d.app_start("com.github.android_app_bootstrap")  # restart app
         cls.test_data = get_test_data(cls.d)
 
@@ -26,9 +25,8 @@ class TestBootStrap(unittest.TestCase, BasePage):
     @classmethod
     @teardownclass
     def tearDownClass(cls):
-        # pass
-        cls.d.make_toast("测试结束", 3)
         cls.d.app_stop("com.github.android_app_bootstrap")  # restart app
+        cls.set_original_ime()
 
 
     @setup
@@ -44,16 +42,13 @@ class TestBootStrap(unittest.TestCase, BasePage):
         '''登录'''
         LoginPage.LoginPage().wait_page()
         LoginPage.login(self.test_data['user_name'], self.test_data['password'])
-        print('sdjafkjshdfk'
-              'jhasdkjfhsdkfjasdkjfh'
-              'skldjfhlaskdjfhlaskdjhflaskdj'
-              'hflkasjdfhlkasjdfhkasjdhfkjdsha')
+        print('登录成功')
 
 
 
     @testcase
-    def test_02_scroll_tableview(self):
-        '''弹窗操作'''
+    def test_02_show_toast(self):
+        '''点击弹窗toast'''
         self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
         self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
         self.d(text='Toast').click()
@@ -61,12 +56,29 @@ class TestBootStrap(unittest.TestCase, BasePage):
         self.back()
         self.back()
 
+    @testcase
+    def test_03_auto_click_alert(self):
+        '''弹窗自动点击测试'''
+        self.watch_device()
+        self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
+        self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
+        self.d(text='Alert').click()
+        self.d(text='Show Dialog').click()
+        self.back()
+        self.d(text='Alert').click()
+        self.back()
+        self.d(text='Alert').click()
 
+        self.d(text='Show Dialog').click()
+        # self.d(text='Show Dialog').click()
 
+        self.unwatch_device()
 
     @testcase
-    def test_03webview(self):
+    def test_04_webview(self):
         '''webview测试 '''
+        self.back()
+        self.back()
         self.d(text='Baidu').click()
         time.sleep(3)
         driver = self.set_chromedriver()
@@ -79,7 +91,7 @@ class TestBootStrap(unittest.TestCase, BasePage):
 
 
     @testcase
-    def test_04_ZZZZZ(self):
+    def test_05_Bar_click(self):
         '''主页操作并退出'''
         HomePage().home_click()
         HomePage().baidu_click()
@@ -95,6 +107,17 @@ class TestBootStrap(unittest.TestCase, BasePage):
     def test_05_login_again(self):
         '''再次登录'''
         LoginPage.LoginPage().login_click()
+
+    @testcase
+    def test_06_swipe(self):
+        '''swipe 滑动测试'''
+        self.d(resourceId="com.github.android_app_bootstrap:id/imageview").click()
+        self.d(resourceId="com.github.android_app_bootstrap:id/list_button").click()
+        self.d(text='Gesture').click()
+        self.swipe_up()
+        self.swipe_left()
+        self.swipe_down()
+        self.swipe_right()
 
         
 
