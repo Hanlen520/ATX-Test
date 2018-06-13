@@ -44,6 +44,10 @@ class TestBootStrap(unittest.TestCase, BasePage):
         '''登录'''
         LoginPage.LoginPage().wait_page()
         LoginPage.login(self.test_data['user_name'], self.test_data['password'])
+        print('sdjafkjshdfk'
+              'jhasdkjfhsdkfjasdkjfh'
+              'skldjfhlaskdjfhlaskdjhflaskdj'
+              'hflkasjdfhlkasjdfhkasjdhfkjdsha')
 
 
 
